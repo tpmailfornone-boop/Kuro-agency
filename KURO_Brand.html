@@ -9,6 +9,9 @@
     --ink:#0B0B0C; --panel:#1B1B1E; --paper:#F5F2EF; --acid:#C8E634; --mut:#8A8A8E; --line:#2A2A2E;
   }
   *{box-sizing:border-box;margin:0;padding:0}
+  html.lenis,html.lenis body{height:auto}
+  .lenis.lenis-smooth{scroll-behavior:auto!important}
+  .lenis.lenis-stopped{overflow:hidden}
   body{background:var(--ink);color:#fff;font-family:'Archivo','Poppins','Segoe UI',sans-serif;padding:34px 24px 46px;max-width:1100px;overflow-x:hidden}
   .kick{font-size:10px;letter-spacing:.45em;text-transform:uppercase;color:var(--mut);margin-bottom:12px}
   h1{font-weight:900;font-size:clamp(40px,7vw,72px);letter-spacing:-2px;text-transform:uppercase;line-height:.95}
@@ -121,5 +124,15 @@
     </div>
     <p style="margin-top:14px"><b>Saved:</b> agency name + founders stored in permanent memory. Next up: logo file set, agency site, or client pitch deck &mdash; say the word.</p>
   </footer>
+<script src="assets/lenis.min.js"></script>
+<script>
+  if (typeof Lenis !== 'undefined' && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const lenis = new Lenis({ duration: 1.2, smoothWheel: true });
+    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
+    const kanji = document.querySelector('.kanji-bg');
+    if (kanji) lenis.on('scroll', ({ scroll }) => { kanji.style.transform = `translate3d(0, ${scroll * 0.15}px, 0)`; });
+  }
+</script>
 </body>
 </html>

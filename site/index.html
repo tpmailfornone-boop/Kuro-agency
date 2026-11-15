@@ -160,7 +160,6 @@ img,svg{display:block;max-width:100%}
 :focus-visible{
   outline:2px solid var(--acid);
   outline-offset:3px;
-  border-radius:var(--r-1);
 }
 
 /* screen-reader only */
@@ -229,6 +228,138 @@ img,svg{display:block;max-width:100%}
   display:block;
 }
 
+/* ------------------------------------------------------------------
+   top bar
+   ------------------------------------------------------------------ */
+.bar{
+  display:grid;
+  grid-template-columns:1fr auto;
+  grid-template-areas:
+    "brand cta"
+    "status status";
+  align-items:center;
+  gap:var(--s-1) var(--s-4);
+  min-height:var(--bar-h);
+  padding-block:var(--s-2);
+}
+.bar .brand{
+  grid-area:brand;
+  justify-self:start;
+}
+
+.bar .status{
+  grid-area:status;
+  justify-self:start;
+}
+.status{
+  display:inline-flex;
+  align-items:center;
+  gap:var(--s-2);
+}
+
+.dot{
+  width:6px;
+  height:6px;
+  flex:none;
+  border-radius:50%;
+  background:var(--acid);
+}
+
+/* ------------------------------------------------------------------
+   buttons
+   ------------------------------------------------------------------ */
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:var(--s-2);
+  min-height:48px;
+  padding-inline:var(--s-6);
+  border-radius:var(--r-2);
+  font-size:var(--text-body);
+  font-weight:600;
+  transition:background-color var(--fast) var(--ease),color var(--fast) var(--ease);
+}
+.btn-primary{
+  background:var(--acid);
+  color:var(--canvas);
+}
+.btn-primary:hover{background:var(--ink)}
+.bar .btn{
+  grid-area:cta;
+  justify-self:end;
+  min-height:44px;
+  padding-inline:var(--s-5);
+}
+
+.btn-quiet{
+  display:inline-flex;
+  align-items:center;
+  gap:var(--s-2);
+  min-height:48px;
+  color:var(--ink);
+  font-weight:600;
+  transition:color var(--fast) var(--ease);
+}
+.btn-quiet .arrow{transition:transform var(--fast) var(--ease)}
+.btn-quiet:hover,
+.btn-quiet:focus-visible{color:var(--acid)}
+.btn-quiet:hover .arrow,
+.btn-quiet:focus-visible .arrow{transform:translateX(3px)}
+
+/* ------------------------------------------------------------------
+   hero
+   ------------------------------------------------------------------ */
+.hero{
+  display:grid;
+  align-content:center;
+  min-height:88svh;
+  padding-block:var(--s-10) var(--s-16);
+}
+.hero-head{margin:0}
+.hero-line{
+  display:block;
+  width:fit-content;
+  color:var(--ink);
+  transition:color var(--fast) var(--ease);
+}
+.hero-line:hover,
+.hero-line:focus-visible{color:var(--acid)}
+.hero-sub{
+  margin-top:var(--s-6);
+  max-width:46ch;
+}
+.hero-actions{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:var(--s-3) var(--s-6);
+  margin-top:var(--s-8);
+}
+.hero-meta{
+  margin-top:var(--s-6);
+  text-wrap:pretty;
+}
+
+/* ------------------------------------------------------------------
+   breakpoints
+   ------------------------------------------------------------------ */
+@media (max-width:719px){
+  :root{--bar-h:84px}
+  .hero-actions{display:grid;gap:var(--s-2)}
+  .hero-actions .btn{width:100%}
+  .hero-actions .btn-quiet{justify-self:start;width:auto}
+}
+@media (min-width:720px){
+  .bar{
+    grid-template-columns:auto 1fr auto;
+    grid-template-areas:"brand status cta";
+    gap:var(--s-6);
+    padding-block:0;
+  }
+  .bar .status{justify-self:end}
+}
+
 @media (prefers-reduced-motion:no-preference){
   html{scroll-behavior:smooth}
 }
@@ -245,14 +376,33 @@ img,svg{display:block;max-width:100%}
 <a class="skip" href="#main">Skip to services</a>
 
 <header class="topbar">
-  <div class="wrap">
+  <div class="wrap bar">
     <a class="brand" href="./">
       <svg class="wordmark" viewBox="0 0 1989 714" width="112" height="40" role="img" aria-label="KURO"><path d="M0 0H132V399H219L346 216H492L326 456L502 714H356L216 511H132V714H0ZM542 609V216H674V568L708 602H788L886 504V216H1018V714H896V629L810 714H647ZM1118 216H1240V299L1320 216H1462V328H1347L1250 428V714H1118ZM1497 610V320L1600 216H1886L1989 320V610L1886 714H1600ZM1822 604 1857 569V361L1822 326H1664L1629 361V569L1664 604Z"/></svg>
     </a>
+    <p class="status t-meta"><span class="dot" aria-hidden="true"></span>Taking new work for December</p>
+    <a class="btn btn-primary" href="https://wa.me/91XXXXXXXXXX?text=Hi%20KURO%2C%20I%27d%20like%20to%20talk%20about%20a%20project.%20What%20I%20need%3A%20">Message us</a>
   </div>
 </header>
 
 <main id="main">
+
+  <section class="hero">
+    <div class="wrap">
+      <h1 class="hero-head">
+        <a class="hero-line" href="#tomorrow">Fixed by tomorrow.</a>
+        <a class="hero-line" href="#this-week">Built this week.</a>
+        <a class="hero-line" href="#every-month">Kept running every month.</a>
+      </h1>
+      <p class="hero-sub t-lead">KURO is three people, one studio, no handoffs. You talk to the person who builds it.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="https://wa.me/91XXXXXXXXXX?text=Hi%20KURO%2C%20I%27d%20like%20to%20talk%20about%20a%20project.%20What%20I%20need%3A%20">Message us on WhatsApp</a>
+        <a class="btn-quiet" href="#live-now">See live work <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+      <p class="hero-meta t-meta">Riu, Kai and Rishabh · Delhi · since October 2026</p>
+    </div>
+  </section>
+
   <nav class="rail" aria-label="Sections"></nav>
 </main>
 

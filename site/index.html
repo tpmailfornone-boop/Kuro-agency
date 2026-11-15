@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark">
 <title>KURO</title>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-var-latin.woff2" crossorigin>
 <style>
 /* ------------------------------------------------------------------
    tokens
@@ -197,6 +198,21 @@ img,svg{display:block;max-width:100%}
   padding-inline:var(--gutter);
 }
 
+/* wordmark: Chakra Petch Bold outlined to a single path, so no Chakra file ships */
+.brand{
+  display:inline-flex;
+  align-items:center;
+  padding-block:var(--s-2);
+  color:var(--ink);
+}
+.wordmark{
+  height:22px;
+  width:auto;
+  fill:currentColor;
+  transition:color var(--fast) var(--ease);
+}
+.brand:hover .wordmark{color:var(--acid)}
+
 /* landmarks */
 .topbar{
   position:sticky;
@@ -229,7 +245,11 @@ img,svg{display:block;max-width:100%}
 <a class="skip" href="#main">Skip to services</a>
 
 <header class="topbar">
-  <div class="wrap"></div>
+  <div class="wrap">
+    <a class="brand" href="./">
+      <svg class="wordmark" viewBox="0 0 1989 714" width="112" height="40" role="img" aria-label="KURO"><path d="M0 0H132V399H219L346 216H492L326 456L502 714H356L216 511H132V714H0ZM542 609V216H674V568L708 602H788L886 504V216H1018V714H896V629L810 714H647ZM1118 216H1240V299L1320 216H1462V328H1347L1250 428V714H1118ZM1497 610V320L1600 216H1886L1989 320V610L1886 714H1600ZM1822 604 1857 569V361L1822 326H1664L1629 361V569L1664 604Z"/></svg>
+    </a>
+  </div>
 </header>
 
 <main id="main">

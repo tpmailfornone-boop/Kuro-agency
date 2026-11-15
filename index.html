@@ -5,1034 +5,484 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>KURO — An Agency Trio</title>
 <meta name="description" content="KURO — an agency trio. Web design, automation, editing, and more.">
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;900&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Chakra+Petch:wght@700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#0B0B0C; --panel:#1B1B1E; --panel2:#232327; --paper:#F5F2EF;
-    --acid:#C8E634; --mut:#8A8A8E; --line:#26262B;
+    --canvas:#101010; --soft:#171717; --raise:#202020;
+    --ink:#f2f2f2; --body:#bdbdbd; --mute:#8b949e;
+    --acid:#C8E634;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html{overflow-x:hidden;overflow-x:clip}
-  @media(prefers-reduced-motion:no-preference){
-    html:not(.lenis){scroll-behavior:smooth}
-  }
+  html{scroll-behavior:smooth;overflow-x:clip}
+  body{background:var(--canvas);color:var(--ink);font-family:'Inter','Segoe UI',system-ui,sans-serif;
+    font-size:16px;line-height:1.6;overflow-x:clip;-webkit-font-smoothing:antialiased}
+  ::selection{background:var(--acid);color:#101010}
+  a{color:inherit}
+  .wrap{max-width:1240px;margin:0 auto;padding:0 32px}
+  .h-display{font-weight:500;letter-spacing:-0.035em;line-height:1.08}
+  .h-2{font-size:clamp(28px,3.6vw,42px);font-weight:500;letter-spacing:-0.02em;line-height:1.15}
+  .small{font-size:14px;color:var(--mute)}
+  .btn{display:inline-flex;align-items:center;gap:10px;border-radius:999px;padding:13px 26px;
+    font-size:15px;font-weight:500;text-decoration:none;cursor:pointer;font-family:inherit;transition:background .2s,color .2s,border-color .2s}
+  .btn-fill{background:var(--acid);color:#101010;border:1px solid var(--acid)}
+  .btn-fill:hover{background:#fff;border-color:#fff}
+  .btn-ghost{background:transparent;color:var(--ink);border:1px solid #3a3a40}
+  .btn-ghost:hover{border-color:var(--acid);color:var(--acid)}
 
-  /* ═══ LENIS PHYSICS-BASED SMOOTH SCROLL ═══ */
-  html.lenis,html.lenis body{height:auto}
-  .lenis.lenis-smooth{scroll-behavior:auto!important}
-  .lenis.lenis-smooth [data-lenis-prevent]{overscroll-behavior:contain}
-  .lenis.lenis-stopped{overflow:hidden}
-  .lenis.lenis-smooth iframe{pointer-events:none}
-
-  /* Physics Hairline Scroll Progress Bar */
-  .scroll-progress{position:fixed;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,var(--acid) 0%,#8dff8a 50%,#00ff9d 100%);transform-origin:0 50%;transform:scaleX(0);z-index:9999;pointer-events:none;box-shadow:0 0 10px rgba(200,230,52,.6),0 0 18px rgba(0,255,157,.35);will-change:transform}
-  body{background:var(--ink);color:#fff;font-family:'Archivo','Segoe UI',system-ui,sans-serif;overflow-x:hidden}
-  body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:5;
-    background:radial-gradient(120% 90% at 50% 30%,transparent 55%,rgba(0,0,0,.5) 100%)}
-  .grain{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:6;opacity:.045;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
-    }
-  @keyframes grain{0%,100%{transform:translate(0,0)}20%{transform:translate(-2%,3%)}40%{transform:translate(3%,-2%)}60%{transform:translate(-3%,-3%)}80%{transform:translate(2%,2%)}}
-  .kanji{position:fixed;right:-90px;top:12vh;font-size:46vw;font-weight:900;color:rgba(255,255,255,.025);line-height:1;pointer-events:none;z-index:0;font-family:serif;user-select:none;will-change:transform}
-  ::selection{background:var(--acid);color:#0B0B0C}
-
-  .label{font-size:10px;letter-spacing:.42em;text-transform:uppercase;color:var(--mut)}
-
-  /* WELCOME SPLASH */
-  #loader{position:fixed;inset:0;background:var(--ink);z-index:100;display:flex;align-items:center;justify-content:center;transition:transform .8s cubic-bezier(.77,0,.18,1)}
-  .flip-word{display:flex;gap:.06em;font-family:'Chakra Petch',sans-serif;font-weight:700;
-    font-size:clamp(44px,7.5vw,104px);line-height:1;letter-spacing:.02em;color:#F4F7F0;
-    perspective:700px;text-shadow:0 0 46px rgba(200,230,52,.18)}
-  .flip-word .fl{display:inline-block;transform-style:preserve-3d;transform-origin:50% 60%;will-change:transform,opacity,filter}
-  .flip-word.is-final{color:transparent;background:linear-gradient(100deg,#f6ff9a 0%,#d8f04a 20%,#a9ff8a 45%,#4dffb0 68%,#00ff9d 100%);-webkit-background-clip:text;background-clip:text;text-shadow:none;filter:drop-shadow(0 0 22px rgba(0,255,140,.45))}
-  #loader .bar{position:absolute;bottom:0;left:0;height:3px;background:var(--acid);width:0%;animation:loadbar 1.7s ease forwards}
+  /* SPLASH */
+  #loader{position:fixed;inset:0;background:var(--canvas);z-index:100;display:flex;align-items:center;justify-content:center;
+    transition:transform .7s cubic-bezier(.77,0,.18,1)}
+  #loader .w-big{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:clamp(54px,10vw,120px);
+    letter-spacing:-0.02em;line-height:1;text-align:center}
+  #loader .w-sub{text-align:center;font-size:14px;color:var(--mute);margin-top:12px}
+  #loader .bar{position:absolute;bottom:0;left:0;height:3px;background:var(--acid);width:0%;animation:loadbar 1.5s ease forwards}
   @keyframes loadbar{to{width:100%}}
-
-  /* ═══ SHARE SHEET ═══ */
-  .hdr-right{display:flex;align-items:center;gap:18px}
-  .share-btn{display:inline-flex;align-items:center;gap:8px;background:transparent;color:#F4F7F0;border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:.04em;cursor:pointer;
-    transition:border-color .28s cubic-bezier(.4,0,.2,1),color .28s cubic-bezier(.4,0,.2,1),background-color .28s cubic-bezier(.4,0,.2,1),transform .22s cubic-bezier(.4,0,.2,1)}
-  .share-btn svg{transition:transform .32s cubic-bezier(.4,0,.2,1)}
-  .share-btn:hover{border-color:#46503f;background:rgba(255,255,255,.04);transform:translateY(-1px)}
-  .share-btn:hover svg{transform:rotate(-8deg) scale(1.06)}
-  .share-btn:active{transform:translateY(0) scale(.97)}
-  .share-btn:focus-visible{outline:1px solid rgba(255,255,255,.45);outline-offset:2px}
-  body.ss-lock{overflow:hidden}
-
-  .ss-backdrop{position:fixed;inset:0;z-index:1000;background:rgba(3,5,4,.72);opacity:0;transition:opacity .3s ease;display:flex;align-items:flex-end;justify-content:center;pointer-events:none}
-  .ss-backdrop[hidden]{display:none}
-  .ss-backdrop.open{pointer-events:auto}
-  .ss-backdrop.open{opacity:1}
-  @media(min-width:640px){.ss-backdrop{align-items:center}}
-  .ss-sheet{width:100%;max-width:420px;background:#111312;border:1px solid #242823;border-radius:18px 18px 0 0;padding:20px 18px max(20px,env(safe-area-inset-bottom));transform:translateY(18px);transition:transform .38s cubic-bezier(.16,1,.3,1);box-shadow:0 -20px 60px rgba(0,0,0,.5)}
-  @media(min-width:640px){.ss-sheet{border-radius:18px;transform:translateY(8px) scale(.985)}}
-  .ss-backdrop.open .ss-sheet{transform:none}
-  .ss-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:16px}
-  .ss-head h3{margin:0;font-size:15px;font-weight:600;letter-spacing:-.01em}
-  .ss-head p{margin:4px 0 0;font-size:11.5px;color:var(--mut);word-break:break-all;max-width:300px}
-  .ss-close{background:transparent;border:1px solid transparent;color:var(--mut);font-size:20px;line-height:1;cursor:pointer;padding:2px 7px;border-radius:8px;transition:color .2s ease,border-color .2s ease,background-color .2s ease}
-  .ss-close:hover{color:#fff;background:rgba(255,255,255,.05)}
-  .ss-close:focus,.ss-close:focus-visible{outline:1px solid rgba(255,255,255,.28);outline-offset:1px;color:#fff}
-  .ss-qr{display:flex;gap:14px;align-items:center;background:#0B0D0C;border:1px solid #1E2320;border-radius:14px;padding:14px;margin-bottom:14px}
-  .ss-qr img{display:block;width:104px;height:104px;border-radius:8px;background:#fff;padding:6px}
-  .ss-qr .ss-qr-txt{font-size:12px;line-height:1.5;color:#C9CFC7}
-  .ss-qr .ss-qr-txt b{display:block;color:#fff;font-weight:600;margin-bottom:4px}
-  .ss-link{display:flex;gap:8px;margin-bottom:14px}
-  .ss-link input{flex:1;min-width:0;background:#0B0D0C;border:1px solid #1E2320;border-radius:10px;color:#dfe5dd;font-family:inherit;font-size:12px;padding:10px 12px;outline:none}
-  .ss-link input:focus{border-color:#3a423c}
-  .ss-copy{background:var(--acid);color:#0B0B0C;border:0;border-radius:10px;padding:0 16px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;transition:filter .15s}
-  .ss-copy:hover{filter:brightness(1.08)}
-  .ss-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
-  .ss-dest{display:flex;flex-direction:column;align-items:center;gap:7px;background:#0B0D0C;border:1px solid #1E2320;border-radius:12px;padding:12px 6px;color:#DDE3DA;text-decoration:none;font-size:10.5px;transition:border-color .15s,transform .12s}
-  .ss-dest:hover{border-color:#46503f;transform:translateY(-1px)}
-  .ss-dest svg{width:20px;height:20px}
-  .ss-foot{display:flex;gap:8px}
-  .ss-foot button,.ss-foot a{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;background:#161A17;color:#E7ECE4;border:1px solid #242823;border-radius:999px;height:40px;font-family:inherit;font-size:12px;cursor:pointer;text-decoration:none;transition:border-color .15s}
-  .ss-foot button:hover,.ss-foot a:hover{border-color:#46503f}
-  .ss-foot a[hidden]{display:none}
   #loader.done{transform:translateY(-100%)}
 
-  /* BANNER */
-  .banner{border-bottom:1px solid var(--line);padding:18px 5vw;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
-  .banner .q{font-weight:700;font-size:15px;letter-spacing:.02em}
-  .banner .q span{color:var(--acid)}
-  .banner .avail{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--mut)}
-  .banner .avail b{color:#fff;font-weight:500}
-
-  /* HEADER */
-  header{position:sticky;top:0;z-index:50;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;row-gap:8px;padding:16px 5vw;background:rgba(11,11,12,.94);border-bottom:1px solid var(--line);transition:background-color .3s ease,border-color .3s ease,box-shadow .3s ease}
-  header.is-scrolled{background:rgba(11,11,12,.98);border-bottom-color:rgba(200,230,52,.2);box-shadow:0 10px 30px -10px rgba(0,0,0,.85)}
+  /* NAV */
+  header{position:sticky;top:0;z-index:50;background:var(--canvas)}
+  .nav{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:18px 32px;max-width:1240px;margin:0 auto}
+  .logo{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:24px;letter-spacing:-0.01em;
+    text-decoration:none;color:var(--ink);line-height:1}
+  .nav-links{display:flex;gap:28px;align-items:center}
+  .nav-links a{color:var(--body);text-decoration:none;font-size:15px;font-weight:500;transition:color .2s}
+  .nav-links a:hover{color:var(--ink)}
+  .nav .btn{padding:10px 20px;font-size:14px}
   @media(max-width:760px){
-    header{padding:12px 5vw}
-    header nav{order:3;width:100%;justify-content:center;gap:22px;padding-top:6px;border-top:1px solid var(--line)}
-    header nav a{font-size:9px;letter-spacing:.22em}
-    .clock{font-size:9px;letter-spacing:.15em}
+    .nav{flex-wrap:wrap;padding:14px 20px}
+    .nav-links{order:3;width:100%;justify-content:center;gap:20px;padding-top:10px;flex-wrap:wrap}
+    .nav-links a{font-size:14px}
   }
-  .logo{font-weight:900;font-size:22px;letter-spacing:.18em;display:flex;align-items:center;text-decoration:none;color:#fff;perspective:700px}
-  .logo-txt{display:inline-flex;transform-style:preserve-3d;text-transform:uppercase}
-  .logo-txt .lt{display:inline-block;transform-style:preserve-3d;transform-origin:50% 60%;will-change:transform}
-  @media (prefers-reduced-motion: reduce){.logo-txt{animation:none}}
-  nav{display:flex;gap:34px}
-  nav a{color:var(--mut);text-decoration:none;font-size:10px;letter-spacing:.3em;text-transform:uppercase;transition:color .2s}
-  nav a:hover{color:#fff}
-  .clock{font-size:10px;letter-spacing:.25em;color:var(--mut);font-variant-numeric:tabular-nums}
-  .clock b{color:#fff;font-weight:500}
 
   /* HERO */
-  .hero{position:relative;min-height:92vh;min-height:92svh;display:grid;place-items:center;overflow:hidden;isolation:isolate;padding:0 5vw;text-align:center;background:#050C0A}
-  .hero-bg{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;object-position:center;pointer-events:none;transform:translate3d(0,0,0);backface-visibility:hidden;will-change:transform;}
-  .hero-veil{position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(58% 52% at 50% 46%,rgba(3,8,7,.32) 0%,rgba(3,8,7,.14) 58%,rgba(3,8,7,0) 82%),linear-gradient(180deg,rgba(7,9,9,.5) 0%,rgba(7,9,9,.06) 30%,rgba(7,9,9,.12) 68%,rgba(11,11,12,.92) 100%)}
-  .hero-word{position:relative;z-index:2;margin:0;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:clamp(72px,18vw,270px);line-height:.84;letter-spacing:.02em;text-indent:.02em;color:#F4F7F0;text-transform:uppercase;text-shadow:0 30px 90px rgba(0,0,0,.5),0 0 150px rgba(200,230,52,.12);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-.hero-word::before,.hero-word::after{content:'kuro';position:absolute;inset:0;opacity:0;pointer-events:none;text-transform:inherit}
-.hero-word::after{color:#7dffcf;text-shadow:-8px 0 rgba(0,235,255,.8),8px 0 rgba(200,230,52,.7);animation:heroGlitchA 3s steps(1) infinite}
-.hero-word::before{color:#a9ff8a;text-shadow:-18px 0 rgba(0,200,255,.45),18px 0 rgba(200,230,52,.4);animation:heroGlitchB 3s steps(1) infinite}
-@keyframes heroGlitchA{
-  0%,3.9%{opacity:.85;clip-path:polygon(0 14%,100% 14%,100% 26%,0 26%);transform:translate(-6px,0)}
-  4%,49.9%{opacity:0}
-  50%,53.9%{opacity:.8;clip-path:polygon(0 58%,100% 58%,100% 68%,0 68%);transform:translate(7px,0)}
-  54%,100%{opacity:0}}
-@keyframes heroGlitchB{
-  0%,3.9%{opacity:.4;clip-path:polygon(0 34%,100% 34%,100% 44%,0 44%);transform:translate(12px,1px)}
-  4%,49.9%{opacity:0}
-  50%,53.9%{opacity:.38;clip-path:polygon(0 72%,100% 72%,100% 80%,0 80%);transform:translate(-12px,0)}
-  54%,100%{opacity:0}}
-  .hero .scrollcue{position:absolute;right:22px;bottom:30px;z-index:3;font-size:9px;letter-spacing:.42em;color:rgba(255,255,255,.62);writing-mode:vertical-rl;display:flex;align-items:center;gap:8px;text-decoration:none;cursor:pointer;transition:color .2s ease,opacity .2s ease}
-  .hero .scrollcue:hover{color:var(--acid)}
-  .hero .scrollcue:focus-visible{outline:1px solid var(--acid);outline-offset:3px}
-  .hero .scrollcue::before{content:'';width:1px;height:34px;background:rgba(255,255,255,.28);animation:drop 2s ease infinite}
-  @keyframes drop{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
-  @media(max-width:620px){
-    .hero{min-height:84vh;min-height:84svh}
-    .hero-word{font-size:clamp(80px,26vw,150px);letter-spacing:.16em;text-indent:.16em}
-    .hero .scrollcue{right:14px;bottom:20px}
+  .hero{min-height:78vh;display:flex;align-items:center;padding:40px 0}
+  .kanji{position:fixed;right:-70px;top:8vh;font-size:42vw;font-weight:900;color:rgba(255,255,255,.038);
+    line-height:1;pointer-events:none;z-index:0;font-family:Georgia,'Times New Roman',serif;user-select:none}
+  .hero h1{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:clamp(88px,19vw,240px);
+    letter-spacing:-0.02em;line-height:.95;margin:0}
+  .hero .sub{font-size:clamp(17px,2vw,22px);color:var(--body);margin-top:26px;max-width:560px}
+  .hero .sub b{color:var(--ink);font-weight:500}
+  .hero .cta-row{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap}
+
+  /* STATEMENT */
+  .statement{padding:150px 0 140px}
+  .statement h2{font-size:clamp(30px,4.4vw,52px);font-weight:500;letter-spacing:-0.035em;line-height:1.12;max-width:920px}
+  .statement p{font-size:clamp(16px,1.6vw,19px);color:var(--body);max-width:640px;margin-top:30px}
+  .statement .btn{margin-top:34px}
+
+  /* WORKS */
+  .works{padding:20px 0 100px}
+  .works-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px}
+  .works-head h2{font-size:16px;font-weight:600}
+  .work{display:grid;grid-template-columns:1.4fr 1fr 100px 56px;align-items:center;gap:20px;
+    padding:22px 10px;border-radius:14px;text-decoration:none;color:var(--ink);transition:background .25s}
+  .work:hover{background:var(--soft)}
+  .work .title{font-size:clamp(22px,3vw,32px);font-weight:500;letter-spacing:-0.02em;display:flex;align-items:center;gap:14px}
+  .work .title .arr{width:32px;height:32px;border-radius:50%;background:var(--raise);display:grid;place-items:center;
+    font-size:14px;opacity:0;transform:translateX(-8px);transition:.25s}
+  .work:hover .title .arr{opacity:1;transform:none}
+  .work .meta{color:var(--mute);font-size:14px}
+  .work .dur,.work .yr{font-size:14px;color:var(--mute);white-space:nowrap;text-align:right;font-variant-numeric:tabular-nums}
+  @media(max-width:820px){
+    .work{grid-template-columns:1fr auto;grid-template-rows:auto auto;row-gap:8px}
+    .work .meta{grid-column:1/-1;order:3}
+    .work .dur{display:none}
   }
 
-  /* MARQUEE */
-  .marquee{border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;padding:22px 0;background:var(--panel);contain:layout paint}
-  .track{display:flex;align-items:center;width:max-content;will-change:transform;transform:translate3d(0,0,0);animation:mq 18s linear infinite}
-  .track span{font-weight:900;font-size:clamp(20px,3.4vw,34px);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;color:#fff;flex:0 0 auto}
-  .track span.hollow{color:transparent;-webkit-text-stroke:1.2px rgba(255,255,255,.55)}
-  .track i{width:9px;height:9px;border-radius:50%;background:var(--acid);box-shadow:0 0 10px rgba(200,230,52,.85),0 0 22px rgba(200,230,52,.45);margin:0 26px;flex:0 0 auto}
-  @keyframes mq{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
+  /* SAMPLE */
+  .sample{padding:0 0 130px}
+  .sample-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px}
+  .sample-head h2{font-size:16px;font-weight:600}
+  .sample-note{color:var(--body);font-size:15px;max-width:620px;margin:14px 0 28px}
+  .demo-tabs{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 18px}
+  .tab{border:1px solid #3a3a40;background:transparent;color:var(--body);padding:9px 18px;border-radius:999px;
+    font-size:14px;font-weight:500;cursor:pointer;transition:.2s;font-family:inherit}
+  .tab:hover{color:var(--ink);border-color:#55555c}
+  .tab.on{border-color:var(--acid);color:var(--acid)}
+  .frame{background:var(--soft);border-radius:18px;overflow:hidden}
+  .frame-bar{display:flex;align-items:center;gap:8px;padding:12px 16px}
+  .frame-bar i{width:9px;height:9px;border-radius:50%;background:#3a3a40}
+  .frame-bar i.on{background:var(--acid)}
+  .frame-bar .url{margin-left:10px;font-size:13px;color:var(--mute)}
+  .frame iframe{width:100%;height:520px;border:0;display:block}
+  @media(max-width:700px){.frame iframe{height:430px}}
+  .sample-cta{margin-top:28px}
+
+  /* MARQUEE — the acid field-of-colour band */
+  .marquee{background:var(--acid);color:#101010;overflow:hidden;padding:20px 0}
+  .track{display:flex;width:max-content;animation:mq 22s linear infinite}
+  .track span{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:clamp(20px,3.2vw,32px);
+    letter-spacing:-0.01em;white-space:nowrap;display:flex;align-items:center}
+  .track span::after{content:'';width:9px;height:9px;border-radius:50%;background:#101010;margin:0 24px}
   @keyframes mq{to{transform:translateX(-50%)}}
 
-  /* OUR WORKS */
-  .works{padding:96px 5vw}
-  .works-head{max-width:1180px;margin:0 auto 46px;text-align:center}
-  .works-head .label{display:block;margin-bottom:18px}
-  .works-head h2{font-weight:900;font-size:clamp(32px,6vw,68px);line-height:.98;letter-spacing:-.02em;text-transform:uppercase}
-  .works-head h2 span{color:var(--acid)}
-  .works-grid{max-width:1320px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:30px}
-  .work-card{display:flex;flex-direction:column}
-  .work-shot{display:block;position:relative;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel);box-shadow:0 30px 60px -40px rgba(0,0,0,.95);transition:border-color .35s ease,box-shadow .45s ease,transform .45s cubic-bezier(.2,.8,.2,1)}
-  .work-shot img{display:block;width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;transition:transform .8s cubic-bezier(.2,.8,.2,1),filter .45s ease}
-  .work-shot::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,11,12,0) 58%,rgba(11,11,12,.72) 100%);opacity:1;transition:opacity .45s ease;pointer-events:none}
-  .work-shot:hover,.work-shot:focus-visible{border-color:rgba(200,230,52,.5);box-shadow:0 45px 80px -40px rgba(0,0,0,1),0 0 0 1px rgba(200,230,52,.22);transform:translateY(-6px);outline:none}
-  .work-shot:focus-visible{outline:2px solid var(--acid);outline-offset:6px}
-  .work-shot:hover img,.work-shot:focus-visible img{transform:scale(1.04);filter:brightness(1.06)}
-  .work-shot:hover::after,.work-shot:focus-visible::after{opacity:.7}
-  .shot-cta{position:absolute;right:14px;bottom:14px;z-index:2;display:inline-flex;align-items:center;gap:8px;background:var(--acid);color:#0B0B0C;border-radius:999px;padding:9px 16px;font-size:9px;font-weight:900;letter-spacing:.2em;text-transform:uppercase;transition:transform .35s ease}
-  .work-shot:hover .shot-cta,.work-shot:focus-visible .shot-cta{transform:translateY(-3px)}
-  .shot-cta i{font-style:normal;transition:transform .35s ease}
-  .work-shot:hover .shot-cta i,.work-shot:focus-visible .shot-cta i{transform:translate(2px,-2px)}
-  .work-meta{margin-top:18px}
-  .work-title{font-weight:900;font-size:clamp(17px,1.7vw,21px);letter-spacing:.02em;text-transform:uppercase;line-height:1.2}
-  .work-tags{margin-top:7px;font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:var(--mut)}
-  .work-tags b{color:var(--acid);font-weight:400;margin:0 7px}
-  .work-desc{margin-top:11px;color:var(--mut);font-size:13.5px;line-height:1.7;letter-spacing:.02em}
-  @media(max-width:980px){.works-grid{grid-template-columns:1fr;gap:46px;max-width:700px}}
-  @media(max-width:760px){
-    .works{padding:70px 5vw}
-  }
-
-  /* FEATURED EDITS */
-  .edits{padding:96px 5vw;border-top:1px solid var(--line)}
-  .edits-head{max-width:1180px;margin:0 auto 56px;text-align:center}
-  .edits-head .label{display:block;margin-bottom:18px}
-  .edits-head h2{font-weight:900;font-size:clamp(32px,6vw,68px);line-height:.98;letter-spacing:-.02em;text-transform:uppercase}
-  .edits-head h2 span{color:var(--acid)}
-  .edits-group{max-width:1320px;margin:0 auto}
-  .edits-group + .edits-group{margin-top:60px}
-  .edits-group-head{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:10px 16px;border-bottom:1px solid var(--line);padding-bottom:13px;margin-bottom:26px}
-  .edits-group-head h3{display:flex;align-items:center;flex-wrap:wrap;gap:12px;font-size:clamp(12px,1.2vw,15px);letter-spacing:.32em;text-transform:uppercase;font-weight:900}
-  .edits-group-head .count{font-size:10px;letter-spacing:.24em;color:var(--mut);font-variant-numeric:tabular-nums;white-space:nowrap}
-
-  /* hybrid grid — each card keeps its native format, tops stay aligned */
-  .edits-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;align-items:start}
-  .edit-card{--ratio:16/9;display:flex;flex-direction:column;margin:0;min-width:0}
-  .edit-card.is-portrait{--ratio:9/16}
-  .edit-card.is-landscape{--ratio:16/9}
-  .edit-card.is-square{--ratio:1/1}
-  .edit-media{position:relative;display:block;width:100%;aspect-ratio:var(--ratio);border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#0A0A0C;cursor:pointer;box-shadow:0 30px 60px -42px rgba(0,0,0,.95);transition:transform .45s cubic-bezier(.2,.8,.2,1),border-color .35s ease,box-shadow .45s ease}
-  .edit-media:hover,.edit-media:focus-within{border-color:rgba(200,230,52,.5);transform:translateY(-5px);box-shadow:0 45px 80px -42px rgba(0,0,0,1),0 0 0 1px rgba(200,230,52,.2)}
-  .edit-media video{position:absolute;inset:0;z-index:1;display:block;width:100%;height:100%;object-fit:cover;object-position:center;background:#000}
-  .edit-media::after{content:'';position:absolute;inset:0;z-index:2;background:linear-gradient(180deg,rgba(6,6,7,.42) 0%,rgba(6,6,7,0) 30%,rgba(6,6,7,0) 72%,rgba(6,6,7,.52) 100%);pointer-events:none;transition:opacity .4s ease}
-  .edit-media.playing::after{opacity:.4}
-  .edit-idx{position:absolute;left:16px;bottom:10px;z-index:3;font-weight:900;font-size:clamp(40px,5vw,64px);line-height:.8;letter-spacing:-.03em;color:rgba(255,255,255,.16);text-shadow:0 2px 24px rgba(0,0,0,.55);user-select:none}
-  .edit-tag{position:absolute;top:12px;right:12px;z-index:4;font-size:8.5px;font-weight:700;letter-spacing:.26em;text-transform:uppercase;color:rgba(255,255,255,.82);background:rgba(11,11,12,.82);border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:6px 11px;transition:opacity .3s ease}
-  .edit-media.playing .edit-tag{opacity:0}
-  .edit-play{position:absolute;left:50%;top:50%;translate:-50% -50%;z-index:5;width:58px;height:58px;border-radius:50%;border:0;background:var(--acid);color:#0B0B0C;display:grid;place-items:center;cursor:pointer;transition:transform .35s cubic-bezier(.2,.8,.2,1),opacity .3s ease,box-shadow .3s ease;box-shadow:0 10px 28px rgba(200,230,52,.22)}
-  .edit-play svg{width:17px;height:17px;margin-left:2px;fill:currentColor}
-  .edit-play:hover{box-shadow:0 14px 34px rgba(200,230,52,.34)}
-  .edit-play:focus-visible{outline:2px solid #fff;outline-offset:4px}
-  .edit-media:hover .edit-play{transform:scale(1.09)}
-  .edit-media.playing .edit-play{opacity:0;transform:scale(.85)}
-  .edit-media.playing:hover .edit-play{opacity:1;transform:scale(1)}
-  .edit-caption{padding-top:16px}
-  .edit-kicker{display:block;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--acid);margin-bottom:7px}
-  .edit-desc{color:var(--mut);font-size:13px;line-height:1.7;letter-spacing:.015em;max-width:46ch}
-
-  /* international clients — glow frame + badge */
-  .edits-group.intl{position:relative;margin-top:64px;padding:clamp(20px,2.4vw,34px);border:1px solid rgba(200,230,52,.24);border-radius:26px;background:radial-gradient(130% 100% at 50% 0%,rgba(200,230,52,.075) 0%,rgba(200,230,52,0) 58%),linear-gradient(180deg,#101013 0%,#0A0A0C 100%);box-shadow:0 0 0 1px rgba(200,230,52,.07),0 40px 100px -60px rgba(0,0,0,1),0 0 90px -34px rgba(200,230,52,.45)}
-  .edits-group.intl::before{content:'';position:absolute;left:9%;right:9%;top:-1px;height:1px;background:linear-gradient(90deg,transparent,rgba(200,230,52,.9),transparent);box-shadow:0 0 18px 1px rgba(200,230,52,.55);pointer-events:none}
-  .edits-group.intl .edits-group-head{border-bottom-color:rgba(200,230,52,.18)}
-  .intl-badge{display:inline-flex;align-items:center;gap:7px;padding:5px 11px;border-radius:999px;border:1px solid rgba(200,230,52,.42);background:rgba(200,230,52,.1);color:var(--acid);font-size:8px;font-weight:700;letter-spacing:.22em;box-shadow:0 0 24px -8px rgba(200,230,52,.7)}
-  .intl-badge i{width:5px;height:5px;border-radius:50%;background:var(--acid);box-shadow:0 0 9px rgba(200,230,52,.95)}
-  .edits-cta{position:relative;overflow:hidden;align-self:stretch;display:flex;flex-direction:column;justify-content:center;gap:12px;border:1px dashed rgba(255,255,255,.16);border-radius:14px;padding:clamp(24px,2.6vw,34px);text-decoration:none;color:#fff;transition:border-color .3s ease,background .3s ease,transform .45s cubic-bezier(.2,.8,.2,1)}
-  .edits-cta::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 1px,transparent 1px 9px);opacity:.6;pointer-events:none}
-  .edits-cta::after{content:'\2197';position:absolute;right:20px;bottom:2px;font-size:clamp(54px,5vw,76px);font-weight:900;line-height:1;color:rgba(200,230,52,.14);pointer-events:none}
-  .edits-cta:hover{border-color:rgba(200,230,52,.55);background:rgba(200,230,52,.04);transform:translateY(-5px)}
-  .edits-cta .label,.edits-cta strong,.edits-cta span{position:relative}
-  .edits-cta .label{margin-bottom:2px}
-  .edits-cta strong{font-weight:900;font-size:clamp(16px,1.7vw,20px);line-height:1.25;text-transform:uppercase;letter-spacing:-.01em}
-  .edits-cta span{color:var(--acid);font-size:10px;letter-spacing:.28em;text-transform:uppercase}
-
-  /* EDIT LIGHTBOX */
-  .edit-modal{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;padding:64px 4vw 56px;background:rgba(6,6,7,.9);-webkit-backdrop-filter:blur(16px) saturate(.8);backdrop-filter:blur(16px) saturate(.8);opacity:0;transition:opacity .26s ease}
-  .edit-modal[hidden]{display:none}
-  .edit-modal.is-open{opacity:1}
-  .edit-modal-stage{position:relative;display:flex;align-items:center;justify-content:center;width:100%;height:100%;min-height:0}
-  .edit-modal video{display:block;width:auto;height:auto;max-width:min(1200px,100%);max-height:100%;border:1px solid rgba(255,255,255,.14);border-radius:12px;background:#000;box-shadow:0 60px 140px -50px rgba(0,0,0,1);transform:scale(.965);opacity:0;transition:transform .32s cubic-bezier(.2,.8,.2,1),opacity .32s ease}
-  .edit-modal.is-ready video{transform:scale(1);opacity:1}
-  .edit-modal-loader{position:absolute;width:34px;height:34px;border-radius:50%;border:2px solid rgba(255,255,255,.16);border-top-color:var(--acid);animation:modalSpin .8s linear infinite;opacity:0;transition:opacity .2s ease;pointer-events:none}
-  .edit-modal.is-loading .edit-modal-loader{opacity:1}
-  @keyframes modalSpin{to{transform:rotate(360deg)}}
-  .edit-modal-close{position:absolute;top:18px;right:20px;z-index:2;width:44px;height:44px;display:grid;place-items:center;border-radius:50%;border:1px solid rgba(255,255,255,.22);background:rgba(11,11,12,.7);color:#fff;font-size:22px;line-height:1;cursor:pointer;transition:background .25s ease,color .25s ease,border-color .25s ease,transform .3s cubic-bezier(.2,.8,.2,1)}
-  .edit-modal-close:hover{background:var(--acid);color:#0B0B0C;border-color:var(--acid);transform:rotate(90deg)}
-  .edit-modal-close:focus-visible{outline:2px solid var(--acid);outline-offset:3px}
-  .edit-modal-close span{display:block;margin-top:-2px}
-  .edit-modal-hint{position:absolute;left:0;right:0;bottom:-34px;text-align:center;font-size:8.5px;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.38)}
-  body.modal-open{overflow:hidden}
-  @media(max-width:900px){
-    .edits{padding:70px 5vw}
-    .edits-group + .edits-group{margin-top:44px}
-    .edits-grid{grid-template-columns:repeat(2,1fr);gap:22px}
-    .edits-grid > .edit-card:nth-child(3){grid-column:1/-1;justify-self:center;width:calc(50% - 11px)}
-    .edits-cta{grid-column:1/-1;align-self:start;padding:34px 26px}
-    .edits-group.intl{margin-top:52px;padding:20px;border-radius:20px}
-    .edits-group.intl::before{left:6%;right:6%}
-    .edit-modal{padding:60px 14px 52px}
-    .edit-modal-close{top:12px;right:12px;width:40px;height:40px;font-size:20px}
-    .edit-modal-hint{display:none}
-  }
-  @media(max-width:620px){
-    .edits-grid{grid-template-columns:1fr;gap:32px}
-    .edits-grid > .edit-card:nth-child(3){grid-column:auto;justify-self:stretch;width:auto}
-    .edits-group-head{flex-direction:column;align-items:flex-start;gap:8px}
-    .edits-group-head h3{letter-spacing:.26em}
-    .edits-group.intl{padding:16px;border-radius:18px}
-    .edit-desc{font-size:12.5px}
-    .edit-play{width:54px;height:54px}
-  }
-
-  /* PERFORMANCE & RESULTS */
-  .results{padding:96px 5vw;border-top:1px solid var(--line)}
-  .results-head{max-width:1180px;margin:0 auto 52px;text-align:center}
-  .results-head .label{display:block;margin-bottom:18px}
-  .results-head h2{font-weight:900;font-size:clamp(32px,6vw,68px);line-height:.98;letter-spacing:-.02em;text-transform:uppercase}
-  .results-head h2 span{color:var(--acid)}
-  .results-sub{max-width:520px;margin:20px auto 0;color:var(--mut);font-size:13.5px;line-height:1.75;letter-spacing:.02em}
-  .bento{max-width:1320px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
-  .bento-card{position:relative;display:block;margin:0;aspect-ratio:16/9;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:linear-gradient(160deg,#16161B 0%,#0C0C0F 72%);box-shadow:0 30px 60px -42px rgba(0,0,0,.95);transition:border-color .35s ease,transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s ease}
-  .bento-card:hover{border-color:rgba(200,230,52,.42);transform:translateY(-5px);box-shadow:0 45px 90px -42px rgba(0,0,0,1),0 0 0 1px rgba(200,230,52,.16)}
-  .bento-card.wide{grid-column:span 2}
-  .bento-card.tall{grid-row:span 2;aspect-ratio:auto}
-  .bento-media{position:absolute;inset:0;background:radial-gradient(120% 120% at 25% 8%,#1D1D25 0%,#0A0A0C 68%)}
-  .bento-media img{position:absolute;inset:0;z-index:1;display:block;width:100%;height:100%;object-fit:cover;object-position:top center;transition:transform .8s cubic-bezier(.2,.8,.2,1),opacity .3s ease}
-  .bento-card.tall .bento-media img{object-fit:contain;object-position:center}
-  .bento-card:hover .bento-media img{transform:scale(1.015)}
-  .bento-card.no-img .bento-media img{opacity:0}
-  /* Meta Ads screenshot — CSS-only row crop. Source is 1536x1024 and the
-     "Ad Set 06 – Messaging (Custom)" row ends at y=754px, so a 1536/754 box
-     with a top-anchored cover image keeps rows 01–06 and hides 07 downward. */
-  .bento-card.ads{aspect-ratio:1536/754}
-  .bento-card.ads .bento-media{background:#0A0A0C}
-  .bento-card.ads .bento-media img{object-fit:cover;object-position:top center}
-  .bento-card.ads:hover .bento-media img{transform:none}
-  .bento-card.ads::after{background:linear-gradient(180deg,rgba(8,8,10,.5) 0%,rgba(8,8,10,0) 24%,rgba(8,8,10,0) 88%,rgba(8,8,10,.26) 100%)}
-  .bento-ph{position:absolute;inset:0;z-index:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;padding:24px;text-align:center}
-  .bento-ph::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.04) 0 1px,transparent 1px 7px);opacity:.55}
-  .bento-ph span{position:relative;font-size:9px;letter-spacing:.34em;text-transform:uppercase;color:var(--acid)}
-  .bento-ph b{position:relative;font-weight:900;font-size:clamp(12px,1.3vw,15px);letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.24)}
-  .bento-card::after{content:'';position:absolute;inset:0;z-index:2;background:linear-gradient(180deg,rgba(8,8,10,.55) 0%,rgba(8,8,10,0) 26%,rgba(8,8,10,0) 82%,rgba(8,8,10,.42) 100%);pointer-events:none}
-  .bento-badge{position:absolute;left:14px;top:14px;z-index:3;display:inline-flex;align-items:center;gap:8px;padding:7px 13px;border-radius:999px;border:1px solid rgba(255,255,255,.16);background:rgba(10,10,12,.85);color:#fff;font-size:8.5px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;white-space:nowrap}
-  .bento-badge i{width:5px;height:5px;border-radius:50%;background:var(--acid);box-shadow:0 0 9px rgba(200,230,52,.85)}
-  .bento-idx{position:absolute;right:14px;bottom:10px;z-index:3;font-weight:900;font-size:clamp(22px,2.4vw,30px);line-height:1;letter-spacing:-.02em;color:rgba(255,255,255,.16)}
-  @media(max-width:900px){
-    .results{padding:70px 5vw}
-    .bento{grid-template-columns:1fr;gap:18px;max-width:640px}
-    .results-head{margin-bottom:36px}
-    .bento-card{aspect-ratio:16/10}
-    .bento-card.wide{grid-column:auto}
-    .bento-card.tall{grid-row:auto;aspect-ratio:9/16;order:4}
-    .bento-badge{left:12px;top:12px;padding:6px 11px;font-size:8px}
-  }
+  /* STUDIO */
+  .studio{padding:140px 0}
+  .studio-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:40px}
+  .studio-head h2{font-size:16px;font-weight:600}
+  .trio{display:flex;flex-direction:column}
+  .member{display:flex;align-items:center;gap:24px;padding:26px 8px;border-radius:14px;transition:background .25s}
+  .member:hover{background:var(--soft)}
+  .member .initial{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:44px;color:var(--mute);
+    width:64px;flex:0 0 auto;line-height:1}
+  .member .name{font-size:clamp(26px,3.4vw,40px);font-weight:500;letter-spacing:-0.02em}
+  .member .dot{width:10px;height:10px;border-radius:50%;background:var(--acid);margin-left:auto;flex:0 0 auto}
+  @media(max-width:600px){.member .initial{font-size:32px;width:44px}}
 
   /* CONTACT */
-  .contact{position:relative;isolation:isolate;overflow:hidden;padding:clamp(120px,16vw,210px) 5vw clamp(120px,15vw,196px);border-top:1px solid var(--line);background:radial-gradient(58% 62% at 50% 44%,rgba(200,230,52,.07) 0%,rgba(200,230,52,0) 70%),linear-gradient(180deg,#0A0A0C 0%,#08080A 100%)}
-  .contact::before{content:'';position:absolute;left:50%;top:46%;z-index:0;width:min(980px,94vw);height:min(460px,64vh);transform:translate(-50%,-50%);background:radial-gradient(closest-side,rgba(200,230,52,.10),transparent 74%);filter:blur(16px);pointer-events:none}
-  .contact-inner{position:relative;z-index:1;max-width:1280px;margin:0 auto;text-align:center}
-  .contact-big{margin:0 auto clamp(40px,5.4vw,60px);font-weight:900;font-size:clamp(36px,6vw,84px);line-height:.98;letter-spacing:-.04em;text-transform:uppercase;text-wrap:balance}
-  .contact-big em{font-style:italic;color:var(--acid);letter-spacing:-.02em}
-  .contact-cta{position:relative;display:inline-flex;align-items:center;justify-content:space-between;gap:clamp(24px,4vw,54px);min-width:min(430px,100%);padding:15px 15px 15px 30px;border-radius:999px;background:var(--acid);color:#0B0B0C;text-decoration:none;font-size:clamp(11px,1.15vw,13px);font-weight:900;letter-spacing:.26em;text-transform:uppercase;box-shadow:0 26px 70px -28px rgba(200,230,52,.5),0 0 0 1px rgba(200,230,52,.2);transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s ease,background .3s ease}
-  .contact-cta i{display:grid;place-items:center;flex:0 0 auto;width:46px;height:46px;border-radius:50%;background:#0B0B0C;color:var(--acid);font-style:normal;font-size:17px;line-height:1;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
-  .contact-cta:hover{transform:translateY(-4px);background:#D6F049;box-shadow:0 36px 90px -30px rgba(200,230,52,.62),0 0 0 1px rgba(200,230,52,.34)}
-  .contact-cta:hover i{transform:translate(3px,-3px)}
-  .contact-cta:focus-visible{outline:2px solid #fff;outline-offset:5px}
-  @media(max-width:620px){
-    .contact{padding:92px 6vw 104px}
-    .contact-big{font-size:clamp(32px,8.8vw,46px);line-height:1.04;margin-bottom:36px}
-    .contact-cta{width:100%;min-width:0;padding:12px 12px 12px 22px;letter-spacing:.2em;gap:16px}
-    .contact-cta i{width:44px;height:44px}
-  }
+  .contact{padding:140px 0 90px}
+  .contact .label{font-size:14px;color:var(--mute);margin-bottom:14px}
+  .contact .big{font-size:clamp(34px,5.4vw,64px);font-weight:500;letter-spacing:-0.035em;line-height:1.08;max-width:760px}
+  .contact .info{display:flex;flex-direction:column;margin-top:48px;max-width:560px}
+  .contact .info .row{padding:16px 0;display:flex;justify-content:space-between;align-items:baseline;gap:14px}
+  .contact .info .row .label2{color:var(--mute);font-size:14px;flex:0 0 auto}
+  .contact .info .row .val{font-size:15px;text-align:right;text-decoration:none}
+  a.val:hover{color:var(--acid)}
+  .form{background:var(--soft);border-radius:18px;padding:36px 30px;align-self:start;margin-top:20px}
+  .form h3{font-size:15px;font-weight:600;margin-bottom:26px}
+  .form input,.form textarea{width:100%;background:transparent;border:0;border-bottom:1px solid #3a3a40;color:var(--ink);
+    padding:14px 2px;font-family:inherit;font-size:15px;outline:none;resize:vertical}
+  .form input::placeholder,.form textarea::placeholder{color:var(--mute)}
+  .form input:focus,.form textarea:focus{border-bottom-color:var(--acid)}
+  .form .btn{margin-top:28px;width:100%;justify-content:center}
+  .contact-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:60px}
+  @media(max-width:820px){.contact-grid{grid-template-columns:1fr}}
 
-  /* REVEAL */
-  .reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
-  .reveal.in{opacity:1;transform:none}
+  footer.site{padding:28px 0 36px}
+  footer.site .row{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
+  footer.site p{font-size:14px;color:var(--mute)}
+  footer.site p b{color:var(--ink);font-weight:600}
 
+  /* MOTION GUARD: hidden state only applied by JS when motion is on */
+  .pre{opacity:0;transform:translateY(26px)}
   @media (prefers-reduced-motion: reduce){
     .track{animation:none}
-    .hero .scrollcue::before{animation:none}
-    .work-shot,.work-shot img,.shot-cta,.shot-cta i{transition:none}
-    .work-shot:hover,.work-shot:focus-visible,.work-shot:hover .shot-cta,.work-shot:focus-visible .shot-cta{transform:none}
+    #loader{transition:none}
     html{scroll-behavior:auto}
+  }
+  @media (prefers-reduced-motion: no-preference){
+    .track{will-change:transform}
   }
 </style>
 </head>
 <body>
-<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
-<div class="grain"></div>
-<div class="kanji">黒</div>
 
-<!-- WELCOME SPLASH -->
+<div class="kanji" aria-hidden="true">黒</div>
 <div id="loader" aria-hidden="true">
-  <div class="flip-word" id="flipWord"></div>
+  <div>
+    <div class="w-big">kuro</div>
+    <div class="w-sub">An agency trio</div>
+  </div>
   <div class="bar" id="bar"></div>
 </div>
 
-<div class="banner">
-  <div class="q">Something in mind?<br>Let's create <span>something meaningful</span> together.</div>
-</div>
-
 <header>
-  <a class="logo" href="#top" aria-label="kuro"><span class="logo-txt"><span class="lt" aria-hidden="true">k</span><span class="lt" aria-hidden="true">u</span><span class="lt" aria-hidden="true">r</span><span class="lt" aria-hidden="true">o</span></span></a>
-  <nav>
-    <a href="#works">Works</a>
-    <a href="#edits">Edits</a>
-    <a href="#results">Results</a>
-    <a href="#contact">Contact</a>
-  </nav>
-  <div class="hdr-right">
-    <div class="clock"><b id="time">--:--</b></div>
-    <button class="share-btn" id="shareBtn" type="button" aria-haspopup="dialog" aria-controls="shareSheet">
-      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.3 10.8 15.7 6.2M8.3 13.2l7.4 4.6"/></svg>
-      <span>Share</span>
-    </button>
+  <div class="nav">
+    <a class="logo" href="#top">kuro</a>
+    <nav class="nav-links">
+      <a href="#works">Works</a>
+      <a href="#sample">Sample</a>
+      <a href="#studio">Studio</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <a class="btn btn-fill" href="#contact">Let's talk</a>
   </div>
 </header>
 
-<section class="hero" id="top" aria-labelledby="hero-title">
-  <video class="hero-bg" autoplay loop muted playsinline preload="auto" poster="assets/hero/hero-poster-web.jpg" aria-hidden="true" tabindex="-1" disablepictureinpicture>
-    <source src="assets/hero/hero-loop-web.mp4" type="video/mp4">
-  </video>
-  <div class="hero-veil" aria-hidden="true"></div>
-  <h1 class="hero-word" id="hero-title">kuro</h1>
-  <a class="scrollcue" href="#works" aria-label="Scroll to portfolio">SCROLL</a>
+<section class="hero wrap" id="top">
+  <div>
+    <p class="small" style="margin-bottom:10px">An agency trio · est. 2026</p>
+    <h1>kuro</h1>
+    <p class="sub"><b>Web design, automation, editing — and more.</b> Three people, one studio, no handoffs. You talk directly to the person who builds it.</p>
+    <div class="cta-row">
+      <a class="btn btn-fill" href="#contact">Start a project</a>
+      <a class="btn btn-ghost" href="#works">See the work</a>
+    </div>
+  </div>
 </section>
-<script>
-  (() => {
-    const v = document.querySelector('.hero-bg');
-    if (!v) return;
-    new IntersectionObserver(([e]) => {
-      if (e.isIntersecting) v.play().catch(() => {});
-      else v.pause();
-    }, { threshold: .02 }).observe(v);
-  })();
 
-  // Logo letters: k = frontflip (+360), u = backflip (−360), r = frontflip, o = backflip
-  // each letter flips in sequence (staggered), on a randomized cadence
-  (() => {
-    const letters = [...document.querySelectorAll('.logo-txt .lt')];
-    if (!letters.length || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const DIR = [1, -1, 1, -1];              // k front, u back, r front, o back
-    const rot = letters.map(() => 0);
-    const flip = () => {
-      letters.forEach((el, i) => {
-        const from = rot[i], to = from + 360 * DIR[i];
-        const a = el.animate(
-          [{ transform: `rotateX(${from}deg)` }, { transform: `rotateX(${to}deg)` }],
-          { duration: 900, delay: i * 90, easing: 'cubic-bezier(.6,.05,.35,1)', fill: 'forwards' }
-        );
-        a.onfinish = () => { rot[i] = to; };
-      });
-      setTimeout(flip, 2600 + Math.random() * 2400);       // randomized cadence 2.6–5.0s
-    };
-    setTimeout(flip, 1600 + Math.random() * 1200);
-  })();
-</script>
+<section class="statement wrap">
+  <h2>Most clients come to us with the same gap — between the brand they have and the work they do. We close it.</h2>
+  <p>KURO is a three-person studio covering web design, automation and editing. One team, one roof, one conversation, from first sketch to launch. Something in mind? Let's create something meaningful together.</p>
+  <a class="btn btn-ghost" href="#studio">Meet the trio</a>
+</section>
+
+<section class="works wrap" id="works">
+  <div class="works-head reveal">
+    <h2>Selected works</h2>
+    <span class="small">01 — 05</span>
+  </div>
+
+  <a class="work reveal" href="https://riuxin.github.io/kuro-Agency-website/">
+    <div class="title">KURO <span class="arr">&#8594;</span></div>
+    <div class="meta">Agency site — Studio KURO</div>
+    <div class="dur">06 pages</div>
+    <div class="yr">2026</div>
+  </a>
+
+  <a class="work reveal" href="#sample">
+    <div class="title">Homemade Baking <span class="arr">&#8594;</span></div>
+    <div class="meta">E-commerce — Keet Cafe</div>
+    <div class="dur">08 pages</div>
+    <div class="yr">2026</div>
+  </a>
+
+  <a class="work reveal" href="#sample">
+    <div class="title">Personal Site <span class="arr">&#8594;</span></div>
+    <div class="meta">Portfolio — Riu</div>
+    <div class="dur">04 pages</div>
+    <div class="yr">2026</div>
+  </a>
+
+  <a class="work reveal" href="#contact">
+    <div class="title">Nova <span class="arr">&#8594;</span></div>
+    <div class="meta">Landing page — Nova Labs</div>
+    <div class="dur">01 page</div>
+    <div class="yr">2026</div>
+  </a>
+
+  <a class="work reveal" href="#contact">
+    <div class="title">Aurora <span class="arr">&#8594;</span></div>
+    <div class="meta">Brand site — Aurora</div>
+    <div class="dur">05 pages</div>
+    <div class="yr">2026</div>
+  </a>
+</section>
+
+<section class="sample wrap" id="sample">
+  <div class="sample-head reveal">
+    <h2>Free sample</h2>
+    <span class="small">01 — 04</span>
+  </div>
+  <p class="sample-note reveal">Free samples — full websites we built for customers, completely open to explore. Switch between them below: this is the quality KURO delivers.</p>
+  <div class="demo-tabs reveal" id="demoTabs">
+    <button class="tab on" data-s="0">.01 · Cafe</button>
+    <button class="tab" data-s="1">.02 · Gym</button>
+    <button class="tab" data-s="2">.03 · Portfolio</button>
+    <button class="tab" data-s="3">.04 · Store</button>
+  </div>
+  <div class="frame reveal">
+    <div class="frame-bar"><i></i><i></i><i class="on"></i><span class="url" id="demoUrl">keetcafe · sample</span></div>
+    <iframe id="demoFrame" title="Free sample website by KURO" loading="lazy"></iframe>
+  </div>
+  <div class="sample-cta reveal"><a class="btn btn-ghost" href="#contact">Want one like this? Let's talk &#8594;</a></div>
+</section>
 
 <div class="marquee" aria-hidden="true">
-  <div class="track"><span>EDITS</span><i></i><span class="hollow">SHOOTS</span><i></i><span>SCRIPTS</span><i></i><span class="hollow">LAUNCH</span><i></i><span>WEB DESIGN</span><i></i><span class="hollow">AUTOMATION</span><i></i><span>UI / UX</span><i></i><span class="hollow">FRONTEND</span><i></i><span>BRAND</span><i></i><span>EDITS</span><i></i><span class="hollow">SHOOTS</span><i></i><span>SCRIPTS</span><i></i><span class="hollow">LAUNCH</span><i></i><span>WEB DESIGN</span><i></i><span class="hollow">AUTOMATION</span><i></i><span>UI / UX</span><i></i><span class="hollow">FRONTEND</span><i></i><span>BRAND</span><i></i></div>
+  <div class="track" id="mq">
+    <span>Web design</span><span>Automation</span><span>Editing</span><span>UI / UX</span><span>Frontend</span><span>Branding</span><span>Motion</span><span>E-commerce</span><span>SEO</span><span>Landing pages</span>
+  </div>
 </div>
 
-<section class="works" id="works" aria-labelledby="works-title">
-  <div class="works-head reveal">
-    <span class="label">Portfolio</span>
-    <h2 id="works-title">Our <span>Works</span></h2>
+<section class="studio wrap" id="studio">
+  <div class="studio-head reveal">
+    <h2>The trio</h2>
+    <span class="small">KURO</span>
   </div>
-
-  <div class="works-grid">
-    <article class="work-card reveal">
-      <a class="work-shot" href="https://kouragefitness.in" target="_blank" rel="noopener noreferrer"
-         aria-label="Visit Kourage Fitness — opens in a new tab">
-        <img src="assets/kourage-fitness-hero.jpg" alt="Kourage Fitness homepage hero reading Transform Your Body. Elevate Your Mind."
-             width="2880" height="1800" loading="lazy" decoding="async">
-        <span class="shot-cta">Visit site <i>&#8599;</i></span>
-      </a>
-      <div class="work-meta">
-        <h3 class="work-title">Kourage Fitness</h3>
-        <div class="work-tags">Web Design <b>&middot;</b> Fitness <b>&middot;</b> 2026</div>
-        <p class="work-desc">Mulund&rsquo;s premium strength gym &mdash; a cinematic, conversion-first site built to turn local search traffic into floor visits.</p>
-      </div>
-    </article>
-
-    <article class="work-card reveal">
-      <a class="work-shot" href="https://gamearthgng.netlify.app/" target="_blank" rel="noopener noreferrer"
-         aria-label="Visit Gamearth — opens in a new tab">
-        <img src="assets/gamearth-hero.jpg" alt="Gamearth homepage hero reading Immersion. Elevated. Unmatched."
-             width="2880" height="1800" loading="lazy" decoding="async">
-        <span class="shot-cta">Visit site <i>&#8599;</i></span>
-      </a>
-      <div class="work-meta">
-        <h3 class="work-title">Gamearth</h3>
-        <div class="work-tags">Web Design <b>&middot;</b> Esports <b>&middot;</b> 2026</div>
-        <p class="work-desc">A premium gaming lounge with zero-lag rigs and private squad rooms &mdash; booking a session takes seconds.</p>
-      </div>
-    </article>
-
-    <article class="work-card reveal">
-      <a class="work-shot" href="https://drift-cafe-and-gaming.netlify.app/" target="_blank" rel="noopener noreferrer"
-         aria-label="Visit Drift Cafe &amp; Gaming — opens in a new tab">
-        <img src="assets/drift-cafe-hero.jpg" alt="Drift Cafe &amp; Gaming homepage hero reading Good Food. Great Vibes. Game On."
-             width="2880" height="1800" loading="lazy" decoding="async">
-        <span class="shot-cta">Visit site <i>&#8599;</i></span>
-      </a>
-      <div class="work-meta">
-        <h3 class="work-title">Drift Cafe &amp; Gaming</h3>
-        <div class="work-tags">Web Design <b>&middot;</b> Hospitality <b>&middot;</b> 2026</div>
-        <p class="work-desc">Hyderabad&rsquo;s cafe-meets-arcade &mdash; an atmospheric, editorial layout with one clear booking flow for tables and consoles alike.</p>
-      </div>
-    </article>
-  </div>
-</section>
-
-<section class="edits" id="edits" aria-labelledby="edits-title">
-  <div class="edits-head reveal">
-    <span class="label">Motion</span>
-    <h2 id="edits-title">Featured <span>Edits</span></h2>
-  </div>
-
-  <div class="edits-group">
-    <div class="edits-group-head reveal">
-      <h3>Signature Masterpieces</h3>
-      <span class="count">03 Edits &middot; Vertical</span>
+  <div class="trio">
+    <div class="member reveal">
+      <div class="initial">R</div>
+      <div class="name">Riu</div>
+      <span class="dot"></span>
     </div>
-    <div class="edits-grid">
-      <figure class="edit-card is-portrait reveal">
-        <div class="edit-media">
-          <video src="assets/edits/edit_1.mp4" poster="assets/posters/edit-1.jpg" preload="metadata" playsinline muted loop></video>
-          <span class="edit-idx" aria-hidden="true">01</span>
-          <span class="edit-tag">Reel</span>
-          <button class="edit-play" type="button" aria-label="Open edit — fitness collaboration reel" aria-haspopup="dialog">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
-          </button>
-        </div>
-        <figcaption class="edit-caption">
-          <span class="edit-kicker">Fitness Collab</span>
-          <p class="edit-desc">Hook-first gym edits engineered to stop the scroll in the first three seconds.</p>
-        </figcaption>
-      </figure>
-
-      <figure class="edit-card is-portrait reveal">
-        <div class="edit-media">
-          <video src="assets/edits/edit_2.mp4" poster="assets/posters/edit-2.jpg" preload="metadata" playsinline muted loop></video>
-          <span class="edit-idx" aria-hidden="true">02</span>
-          <span class="edit-tag">Reel</span>
-          <button class="edit-play" type="button" aria-label="Open edit — minimal brand reel" aria-haspopup="dialog">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
-          </button>
-        </div>
-        <figcaption class="edit-caption">
-          <span class="edit-kicker">Minimal Cut</span>
-          <p class="edit-desc">Restrained, frame-perfect rhythm that keeps attention locked from cut to cut.</p>
-        </figcaption>
-      </figure>
-
-      <figure class="edit-card is-portrait reveal">
-        <div class="edit-media">
-          <video src="assets/edits/edit_3.mp4" poster="assets/posters/edit-3.jpg" preload="metadata" playsinline muted loop></video>
-          <span class="edit-idx" aria-hidden="true">03</span>
-          <span class="edit-tag">Doc Film</span>
-          <button class="edit-play" type="button" aria-label="Open edit — documentary style cut" aria-haspopup="dialog">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
-          </button>
-        </div>
-        <figcaption class="edit-caption">
-          <span class="edit-kicker">Documentary Cut</span>
-          <p class="edit-desc">Narrative pacing and sound design that pull viewers into the story and hold them to the final beat.</p>
-        </figcaption>
-      </figure>
+    <div class="member reveal">
+      <div class="initial">K</div>
+      <div class="name">Kai</div>
+      <span class="dot"></span>
     </div>
-  </div>
-
-  <div class="edits-group intl">
-    <div class="edits-group-head reveal">
-      <h3>International Clients <span class="intl-badge"><i aria-hidden="true"></i>Global</span></h3>
-      <span class="count">02 Edits &middot; Worldwide</span>
-    </div>
-    <div class="edits-grid">
-      <figure class="edit-card is-portrait reveal">
-        <div class="edit-media">
-          <video src="assets/foreign videos/real_estate.mp4" poster="assets/posters/real-estate.jpg" preload="metadata" playsinline muted loop></video>
-          <span class="edit-idx" aria-hidden="true">04</span>
-          <span class="edit-tag">Property Film</span>
-          <button class="edit-play" type="button" aria-label="Open edit — real estate property showcase" aria-haspopup="dialog">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
-          </button>
-        </div>
-        <figcaption class="edit-caption">
-          <span class="edit-kicker">Real Estate</span>
-          <p class="edit-desc">Cinematic property tours engineered for high-net-worth buyer conversion.</p>
-        </figcaption>
-      </figure>
-
-      <figure class="edit-card is-portrait reveal">
-        <div class="edit-media">
-          <video src="assets/foreign videos/talking_head.mp4" poster="assets/posters/talking-head.jpg" preload="metadata" playsinline muted loop></video>
-          <span class="edit-idx" aria-hidden="true">05</span>
-          <span class="edit-tag">Motion Captions</span>
-          <button class="edit-play" type="button" aria-label="Open edit — talking head with dynamic captions" aria-haspopup="dialog">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
-          </button>
-        </div>
-        <figcaption class="edit-caption">
-          <span class="edit-kicker">Talking Head</span>
-          <p class="edit-desc">High-retention dynamic edits with custom motion graphics and kinetic typography.</p>
-        </figcaption>
-      </figure>
-
-      <a class="edits-cta reveal" href="#contact">
-        <span class="label">Next slot</span>
-        <strong>Your brand in<br>the next cut?</strong>
-        <span>Start a project &#8599;</span>
-      </a>
+    <div class="member reveal">
+      <div class="initial">R</div>
+      <div class="name">Rishabh</div>
+      <span class="dot"></span>
     </div>
   </div>
 </section>
 
-<section class="results" id="results" aria-labelledby="results-title">
-  <div class="results-head reveal">
-    <span class="label">Analytics</span>
-    <h2 id="results-title">Performance <span>&amp; Results</span></h2>
-    <p class="results-sub">Real numbers from live campaigns and channels &mdash; the receipts behind the creative.</p>
-  </div>
-
-  <div class="bento">
-    <figure class="bento-card wide ads reveal">
-      <div class="bento-media">
-        <div class="bento-ph" aria-hidden="true"><span>Meta Ads</span><b>Asset placeholder</b></div>
-        <img src="assets/meta-ads.jpg" alt="Meta Ads Manager campaign table showing ad sets 01 to 06 with budget, reach, results and amount spent" loading="lazy" decoding="async">
+<section class="contact wrap" id="contact">
+  <div class="contact-grid">
+    <div class="reveal">
+      <div class="label">Contact</div>
+      <div class="big h-display">Let's create something meaningful together.</div>
+      <div class="info">
+        <div class="row"><span class="label2">Studio</span><span class="val">Available worldwide</span></div>
+        <div class="row"><span class="label2">E-mail</span><a class="val" href="mailto:hello@kuro.graphics">hello@kuro.graphics</a></div>
+        <div class="row"><span class="label2">Socials</span><span class="val">Instagram · Behance · LinkedIn</span></div>
       </div>
-      <span class="bento-badge"><i aria-hidden="true"></i>Meta Ads ROI</span>
-      <span class="bento-idx" aria-hidden="true">01</span>
-    </figure>
-
-    <figure class="bento-card tall reveal">
-      <div class="bento-media">
-        <div class="bento-ph" aria-hidden="true"><span>Instagram</span><b>Asset placeholder</b></div>
-        <img src="[IG_MOBILE_IMG]" alt="Instagram insights screen on mobile showing views and reach" loading="lazy" decoding="async">
-      </div>
-      <span class="bento-badge"><i aria-hidden="true"></i>Instagram Reach</span>
-      <span class="bento-idx" aria-hidden="true">04</span>
-    </figure>
-
-    <figure class="bento-card reveal">
-      <div class="bento-media">
-        <div class="bento-ph" aria-hidden="true"><span>YouTube Studio</span><b>Asset placeholder</b></div>
-        <img src="[YT_DESKTOP_IMG_1]" alt="YouTube Studio analytics overview showing views and watch time growth" loading="lazy" decoding="async">
-      </div>
-      <span class="bento-badge"><i aria-hidden="true"></i>YouTube Growth</span>
-      <span class="bento-idx" aria-hidden="true">02</span>
-    </figure>
-
-    <figure class="bento-card reveal">
-      <div class="bento-media">
-        <div class="bento-ph" aria-hidden="true"><span>YouTube Studio</span><b>Asset placeholder</b></div>
-        <img src="[YT_DESKTOP_IMG_2]" alt="YouTube Studio analytics detail showing impressions and click-through rate" loading="lazy" decoding="async">
-      </div>
-      <span class="bento-badge"><i aria-hidden="true"></i>YouTube Impressions</span>
-      <span class="bento-idx" aria-hidden="true">03</span>
-    </figure>
+    </div>
+    <form class="form reveal" onsubmit="location.href='mailto:hello@kuro.graphics?subject=Project%20inquiry&body='+encodeURIComponent(this.message.value);return false">
+      <h3>Tell us about your next stage.</h3>
+      <input type="text" placeholder="Your name" required>
+      <input type="text" placeholder="Your brand / company">
+      <input type="email" placeholder="Your e-mail" required>
+      <textarea rows="4" placeholder="Message"></textarea>
+      <button class="btn btn-fill" type="submit">Send message</button>
+    </form>
   </div>
 </section>
 
-<section class="contact" id="contact" aria-labelledby="contact-title">
-  <div class="contact-inner">
-    <h2 class="contact-big reveal" id="contact-title">Let's create something<br><em>meaningful</em> together.</h2>
-    <a class="contact-cta reveal" href="mailto:hello@kuro.graphics?subject=Let's%20Work%20Together">
-      <span>Start a project</span>
-      <i aria-hidden="true">&#8599;</i>
-    </a>
+<footer class="site wrap">
+  <div class="row">
+    <p><b>kuro</b> · an agency trio, available worldwide</p>
+    <p>&copy; 2026 · 黒</p>
   </div>
-</section>
-
-<div class="edit-modal" id="edit-modal" role="dialog" aria-modal="true" aria-labelledby="edit-modal-title" hidden data-lenis-prevent>
-  <div class="edit-modal-stage">
-    <span class="edit-modal-loader" aria-hidden="true"></span>
-    <video class="edit-modal-video" id="edit-modal-video" controls playsinline preload="metadata"></video>
-    <p class="edit-modal-hint" id="edit-modal-title">Playing full edit &middot; press Esc to close</p>
-  </div>
-  <button class="edit-modal-close" type="button" aria-label="Close video">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
+</footer>
 
 <script>
-  // Welcome splash: hold ~1.9s, then curtain up
-  // Splash: flip-fade text (port of flip-fade-text) — WELCOME → TO → kuro, then curtain up
+  // Splash: hold ~1.6s, curtain up
   const loader=document.getElementById('loader');
-  const flipWord=document.getElementById('flipWord');
-  let lifted=false;
-  const lift=()=>{
-    if(lifted)return;
-    lifted=true;
-    clearTimeout(liftTimer);
-    loader.classList.add('done');
-    setTimeout(()=>loader.remove(),900);
-    if(window.lenis)window.lenis.start();
-  };
-  const liftTimer=setTimeout(lift,2600);
-  if(matchMedia('(prefers-reduced-motion: reduce)').matches){
-    flipWord.textContent='kuro';lift();
-  }else{
-    const WORDS=['WELCOME','TO','kuro'];
-    const D=380, STAG=55, HOLD=340;
-    const render=word=>{
-      flipWord.innerHTML='';
-      flipWord.classList.toggle('is-final',word==='kuro');
-      [...word].forEach(ch=>{
-        const s=document.createElement('span');
-        s.className='fl';s.textContent=ch===' '?' ':ch;
-        flipWord.appendChild(s);
-      });
-      return [...flipWord.children];
-    };
-    const enter=spans=>Promise.all(spans.map((s,i)=>s.animate(
-      [{transform:'rotateX(90deg) translateY(20px)',opacity:0,filter:'blur(8px)'},
-       {transform:'rotateX(0deg) translateY(0)',opacity:1,filter:'blur(0px)'}],
-      {duration:D,delay:i*STAG,easing:'cubic-bezier(.2,.65,.3,.9)',fill:'both'}).finished));
-    const leave=spans=>Promise.all(spans.map((s,i)=>s.animate(
-      [{transform:'rotateX(0deg)',opacity:1,filter:'blur(0px)'},
-       {transform:'rotateX(-90deg) translateY(-20px)',opacity:0,filter:'blur(8px)'}],
-      {duration:Math.round(D*0.67),delay:i*30,easing:'ease-in',fill:'both'}).finished));
-    (async()=>{
-      for(let i=0;i<WORDS.length;i++){
-        const spans=render(WORDS[i]);
-        await enter(spans);
-        await new Promise(r=>setTimeout(r,HOLD));
-        if(i<WORDS.length-1) await leave(spans);
-      }
-      await new Promise(r=>setTimeout(r,420));
-      lift();
-    })();
-  }
+  setTimeout(()=>{loader.classList.add('done');loader.addEventListener('transitionend',()=>loader.remove());},1600);
 
-  // Mumbai (IST) clock
-  const time=document.getElementById('time');
-  const tick=()=>time.textContent=new Intl.DateTimeFormat('en-IN',{hour:'numeric',minute:'2-digit',hour12:true,timeZone:'Asia/Kolkata'}).format(new Date()).replace(' ',' ').toUpperCase()+' IST';
-  tick();setInterval(tick,10000);
+  // IST clock, 12-hour (current live behaviour)
+  // (clock removed in v3 — nav is single-row; restore on request)
 
+  // Seamless marquee
+  const mq=document.getElementById('mq');mq.innerHTML+=mq.innerHTML;
 
-  // Scroll reveal
-  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.12});
-  document.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transitionDelay=(i%6)*70+'ms';io.observe(el);});
-  // Featured edits — hover preview, click to open the lightbox
-  const editModal = document.getElementById('edit-modal');
-  const editModalVideo = document.getElementById('edit-modal-video');
-  const editModalClose = editModal.querySelector('.edit-modal-close');
-  const editCards = [...document.querySelectorAll('.edit-media')].filter(m => m.querySelector('video'));
-  let editLastFocus = null, editCloseTimer;
-
-  const openEditModal = (src, label, trigger) => {
-    if (!src) return;
-    clearTimeout(editCloseTimer);
-    editCards.forEach(m => {
-      const v = m.querySelector('video');
-      v.pause(); v.muted = true;
-      m.classList.remove('playing');
-    });
-    editLastFocus = trigger || document.activeElement;
-    editModal.classList.remove('is-ready');
-    editModal.classList.add('is-loading');
-    editModal.hidden = false;
-    document.body.classList.add('modal-open');
-    if (window.lenis) window.lenis.stop();
-    editModalVideo.src = src;
-    editModalVideo.setAttribute('aria-label', label || 'Video player');
-    editModalVideo.load();
-    requestAnimationFrame(() => editModal.classList.add('is-open'));
-    const p = editModalVideo.play();
-    if (p && p.catch) p.catch(() => {
-      editModalVideo.muted = true;
-      const p2 = editModalVideo.play();
-      if (p2 && p2.catch) p2.catch(() => {});
-    });
-    editModalClose.focus({ preventScroll: true });
-  };
-
-  const closeEditModal = () => {
-    if (editModal.hidden) return;
-    editModal.classList.remove('is-open', 'is-ready', 'is-loading');
-    document.body.classList.remove('modal-open');
-    if (window.lenis) window.lenis.start();
-    editModalVideo.pause();
-    clearTimeout(editCloseTimer);
-    editCloseTimer = setTimeout(() => {
-      editModal.hidden = true;
-      editModalVideo.removeAttribute('src');
-      editModalVideo.load();
-    }, 280);
-    if (editLastFocus && editLastFocus.focus) editLastFocus.focus({ preventScroll: true });
-  };
-
-  editModalVideo.addEventListener('loadedmetadata', () => {
-    if (editModal.hidden) return;
-    editModal.classList.remove('is-loading');
-    editModal.classList.add('is-ready');
-  });
-  editModalVideo.addEventListener('error', () => editModal.classList.remove('is-loading'));
-
-  editCards.forEach(media => {
-    const video = media.querySelector('video');
-    const btn = media.querySelector('.edit-play');
-    let timer;
-    const preview = () => {
-      media.classList.add('playing');
-      video.muted = true;
-      const p = video.play();
-      if (p && p.catch) p.catch(() => media.classList.remove('playing'));
-    };
-    const stopPreview = () => { media.classList.remove('playing'); video.pause(); };
-    media.addEventListener('mouseenter', () => { clearTimeout(timer); timer = setTimeout(preview, 160); });
-    media.addEventListener('mouseleave', () => { clearTimeout(timer); stopPreview(); });
-    media.addEventListener('focusin', () => { clearTimeout(timer); timer = setTimeout(preview, 160); });
-    media.addEventListener('focusout', () => { clearTimeout(timer); stopPreview(); });
-    media.addEventListener('click', e => {
-      e.preventDefault();
-      openEditModal(video.getAttribute('src'), btn && btn.getAttribute('aria-label'), btn || media);
-    });
-  });
-
-  editModal.addEventListener('click', e => {
-    if (e.target.closest('.edit-modal-close')) { closeEditModal(); return; }
-    if (!e.target.closest('video')) closeEditModal();
-  });
-
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && !editModal.hidden) { e.preventDefault(); closeEditModal(); }
-  });
-
-  editModal.addEventListener('keydown', e => {
-    if (e.key !== 'Tab') return;
-    const items = [...editModal.querySelectorAll('button, video')];
-    if (!items.length) return;
-    const first = items[0], last = items[items.length - 1];
-    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-  });
-
-  // Performance bento — swap in the designed placeholder until a real asset exists
-  document.querySelectorAll('.bento-card img').forEach(img => {
-    const card = img.closest('.bento-card');
-    const fail = () => card.classList.add('no-img');
-    if (img.complete && img.naturalWidth === 0) fail();
-    img.addEventListener('error', fail);
-    img.addEventListener('load', () => card.classList.remove('no-img'));
-  });
-
-</script>
-<div class="ss-backdrop" id="shareSheet" hidden>
-  <div class="ss-sheet" role="dialog" aria-modal="true" aria-labelledby="ssTitle" data-lenis-prevent>
-    <div class="ss-head">
-      <div>
-        <h3 id="ssTitle">Share this page</h3>
-        <p id="ssUrlText"></p>
-      </div>
-      <button class="ss-close" type="button" aria-label="Close share sheet" id="ssClose">&times;</button>
-    </div>
-    <div class="ss-qr">
-      <img id="ssQr" alt="Scannable QR code for the shared link" width="104" height="104">
-      <div class="ss-qr-txt"><b>Scan to open</b>Point any phone camera at the code — no app needed.</div>
-    </div>
-    <div class="ss-link">
-      <input id="ssUrlInput" type="text" readonly aria-label="Page URL">
-      <button class="ss-copy" id="ssCopy" type="button">Copy</button>
-    </div>
-    <div class="ss-grid" id="ssGrid"></div>
-    <div class="ss-foot">
-      <button id="ssDownload" type="button">Download QR</button>
-      <a id="ssNative" href="#" hidden>More…</a>
-    </div>
-  </div>
+  // Free samples gallery (v1 content, verbatim)
+  const SAMPLES=[
+    {url:'keetcafe &middot; sample',html:`<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,'Times New Roman',serif;background:#FDF0D5;color:#61210F}
+nav{display:flex;justify-content:space-between;align-items:center;padding:18px 7%;border-bottom:1px solid rgba(97,33,15,.15)} /* taste-skill-ignore */ (client sample fragment)
+nav b{letter-spacing:.3em;font-size:13px}
+nav span{font-size:11px;letter-spacing:.25em}
+.hero{padding:64px 7% 56px;text-align:center}
+.hero .tag{font-size:11px;letter-spacing:.4em;text-transform:uppercase;color:#B4784A}
+.hero h1{font-size:clamp(34px,6vw,58px);font-style:italic;font-weight:700;margin:16px 0 10px}
+.hero p{font-size:15px;color:#8a5a3b;letter-spacing:.05em}
+.btn{display:inline-block;margin-top:26px;background:#61210F;color:#FDF0D5;padding:13px 34px;font-size:11px;letter-spacing:.3em;text-transform:uppercase;text-decoration:none;border-radius:999px}
+.menu{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:10px 7% 50px}
+.card{background:#fff;border-radius:14px;padding:26px 18px;border:1px solid rgba(97,33,15,.12)}
+.card i{display:block;width:34px;height:34px;border-radius:50%;background:#F2C879;margin:0 auto 12px}
+.card b{font-size:14px;letter-spacing:.12em;text-transform:uppercase}
+.card p{font-size:12px;color:#8a5a3b;margin-top:6px}
+.foot{background:#61210F;text-align:center;padding:22px;font-size:11px;letter-spacing:.3em;color:#FDF0D5}
+@media(max-width:700px){.menu{grid-template-columns:1fr}}
+</style></head><body>
+<nav><b>KEET CAFE</b><span>MENU &middot; VISIT &middot; ORDER</span></nav>
+<div class="hero">
+  <div class="tag">Est. 2026 &middot; Fresh Daily</div>
+  <h1>Welcome to Keet Cafe</h1>
+  <p>Homemade baking. Tasty drinks. Warm corners.</p>
+  <a class="btn" href="#">SEE MENU</a>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
-<script>
-  // ═══ ShareSheet (vanilla port of the share-sheet component) ═══
-  (() => {
-    const LIVE_URL = 'https://riuxin.github.io/kuro-Agency-website/';
-    const url = location.protocol.startsWith('http') ? location.href.split('#')[0] : LIVE_URL;
-    const btn = document.getElementById('shareBtn');
-    const sheet = document.getElementById('shareSheet');
-    const closeBtn = document.getElementById('ssClose');
-    const urlText = document.getElementById('ssUrlText');
-    const urlInput = document.getElementById('ssUrlInput');
-    const copyBtn = document.getElementById('ssCopy');
-    const qrImg = document.getElementById('ssQr');
-    const grid = document.getElementById('ssGrid');
-    const dl = document.getElementById('ssDownload');
-    if (!btn || !sheet) return;
-
-    urlText.textContent = url;
-    urlInput.value = url;
-
-    // destinations
-    const enc = encodeURIComponent;
-    const dests = [
-      ['WhatsApp', 'https://wa.me/?text=' + enc('KURO — an agency trio ' + url), '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.2 14.2c-.2.6-1.2 1.2-1.7 1.2-.5.1-1 .1-1.7-.1-1.7-.6-3.5-1.7-4.9-3.5-.6-.8-1.1-1.7-1.1-2.4 0-.6.3-1.2.7-1.6.2-.2.4-.3.6-.3h.5c.2 0 .4 0 .6.5l.7 1.7c.1.2 0 .4-.1.6l-.4.5c-.1.2-.2.3-.1.5.4.8 1 1.5 1.8 2 .2.1.4.1.5 0l.6-.7c.2-.2.3-.2.5-.1l1.6.8c.2.1.4.2.4.4.1.2.1.7-.1 1z"/></svg>'],
-      ['Telegram', 'https://t.me/share/url?url=' + enc(url) + '&text=' + enc('KURO — an agency trio'), '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.3 18.6 20c-.2 1-.9 1.3-1.8.8l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.4-5 9.1-8.2c.4-.4-.1-.6-.6-.2L6.2 13.1 1.2 11.6c-1.1-.3-1.1-1.1.2-1.6l19.1-7.4c.9-.3 1.6.2 1.4 1.7z"/></svg>'],
-      ['X', 'https://twitter.com/intent/tweet?text=' + enc('KURO — an agency trio') + '&url=' + enc(url), '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 3H22l-7 8 8.2 10h-6.4l-5-6.1L4.9 21H2l7.6-8.7L1.6 3H8l4.5 5.6L18.9 3Zm-1.1 16h1.8L7.3 4.9H5.4L17.8 19Z"/></svg>'],
-      ['Email', 'mailto:?subject=' + enc('KURO — an agency trio') + '&body=' + enc('Have a look: ' + url), '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/></svg>'],
-    ];
-    grid.innerHTML = dests.map(([n, href, icon]) =>
-      `<a class="ss-dest" href="${href}" target="_blank" rel="noopener">${icon}<span>${n}</span></a>`).join('');
-
-    // QR (local, qrcode-generator from CDN; degrades to text if blocked)
-    let qrDataUrl = null;
-    const makeQR = () => {
-      try {
-        const qr = qrcode(0, 'M');
-        qr.addData(url); qr.make();
-        qrDataUrl = qr.createDataURL(10, 2);
-        qrImg.src = qrDataUrl;
-      } catch (e) {
-        qrImg.remove();
-      }
-    };
-    if (window.qrcode) makeQR();
-    else {
-      const sc = document.createElement('script');
-      sc.src = 'https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js';
-      sc.onload = makeQR;
-      document.head.appendChild(sc);
-    }
-
-    // open / close
-    const open = () => {
-      sheet.hidden = false;
-      requestAnimationFrame(() => sheet.classList.add('open'));
-      document.body.classList.add('ss-lock');
-      if (window.lenis) window.lenis.stop();
-      closeBtn.focus();
-    };
-    const close = () => {
-      sheet.classList.remove('open');
-      document.body.classList.remove('ss-lock');
-      if (window.lenis) window.lenis.start();
-      setTimeout(() => { sheet.hidden = true; btn.focus(); }, 220);
-    };
-    btn.addEventListener('click', open);
-    closeBtn.addEventListener('click', close);
-    sheet.addEventListener('click', e => { if (e.target === sheet) close(); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape' && !sheet.hidden) close(); });
-
-    // copy
-    copyBtn.addEventListener('click', async () => {
-      try { await navigator.clipboard.writeText(url); }
-      catch { urlInput.select(); document.execCommand('copy'); }
-      copyBtn.textContent = 'Copied';
-      setTimeout(() => copyBtn.textContent = 'Copy', 1500);
-    });
-
-    // download QR
-    dl.addEventListener('click', () => {
-      if (!qrDataUrl) return;
-      const a = document.createElement('a');
-      a.href = qrDataUrl; a.download = 'kuro-qr.png';
-      document.body.appendChild(a); a.click(); a.remove();
-    });
-  })();
+<div class="menu">
+  <div class="card"><i></i><b>Fresh Bakes</b><p>Croissants, buns &amp; sourdough from the morning oven.</p></div>
+  <div class="card"><i style="background:#EE6E4D"></i><b>Filter Coffee</b><p>Slow-brewed, strong, served the classic way.</p></div>
+  <div class="card"><i style="background:#2C666E"></i><b>Desserts</b><p>Whatever the season brings &mdash; always homemade.</p></div>
+</div>
+<div class="foot">KEET CAFE &mdash; SAMPLE SITE BY KURO</div>
+</body></html>`},
+    {url:'irongym &middot; sample',html:`<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;background:#0B0B0C;color:#fff}
+nav{display:flex;justify-content:space-between;padding:16px 6%;border-bottom:2px solid #C6FF00}
+nav b{letter-spacing:.2em;font-size:14px}
+nav span{font-size:10px;letter-spacing:.3em;color:#9a9aa0}
+.hero{padding:60px 6% 40px}
+.hero h1{font-size:clamp(40px,9vw,84px);font-weight:900;text-transform:uppercase;letter-spacing:-1px;line-height:.9}
+.hero h1 em{font-style:normal;color:#C6FF00}
+.hero p{color:#9a9aa0;font-size:12px;letter-spacing:.2em;text-transform:uppercase;margin-top:14px}
+.chips{display:flex;gap:10px;flex-wrap:wrap;padding:0 6% 40px}
+.chips span{border:2px solid #C6FF00;color:#C6FF00;padding:8px 16px;font-size:10px;letter-spacing:.2em;font-weight:700}
+.join{margin:0 6% 46px;background:#C6FF00;color:#000;text-align:center;padding:15px;font-weight:900;font-size:12px;letter-spacing:.3em}
+.foot{border-top:1px solid #26262B;color:#6a6a70;text-align:center;padding:16px;font-size:10px;letter-spacing:.25em} /* taste-skill-ignore */ (client sample fragment)
+</style></head><body>
+<nav><b>IRON GYM</b><span>CLASSES &middot; COACHES &middot; JOIN</span></nav>
+<div class="hero"><h1>TRAIN<br><em>LOUD.</em></h1><p>Strength &middot; Conditioning &middot; Combat &mdash; no excuses</p></div>
+<div class="chips"><span>CROSSFIT</span><span>BOXING</span><span>POWERLIFTING</span><span>MMA</span></div>
+<div class="join">JOIN THE FLOOR &mdash; FIRST WEEK FREE</div>
+<div class="foot">IRON GYM &mdash; SAMPLE SITE BY KURO</div>
+</body></html>`},
+    {url:'aurastudio &middot; sample',html:`<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#1B1B1E;color:#fff}
+nav{display:flex;justify-content:space-between;padding:18px 6%;border-bottom:1px solid #2a2a2e} /* taste-skill-ignore */ (client sample fragment)
+nav b{font-weight:900;letter-spacing:.25em}
+nav span{font-size:10px;letter-spacing:.3em;color:#8A8A8E}
+.hero{padding:56px 6% 30px;text-align:center}
+.hero .t{font-size:10px;letter-spacing:.5em;color:#8A8A8E;text-transform:uppercase}
+.hero h1{font-weight:900;font-size:clamp(36px,8vw,72px);letter-spacing:.12em;margin:12px 0}
+.hero p{font-size:10px;letter-spacing:.4em;color:#8A8A8E;text-transform:uppercase}
+.gal{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:10px 6% 50px}
+.gal div{aspect-ratio:1/1;background:linear-gradient(135deg,#2b2b30,#1f1f24);border-radius:6px;display:grid;place-items:center;color:#4a4a52;font-weight:900;font-size:22px} /* taste-skill-ignore */ (client sample fragment)
+.foot{text-align:center;padding:18px;font-size:10px;letter-spacing:.3em;color:#8A8A8E;border-top:1px solid #2a2a2e} /* taste-skill-ignore */ (client sample fragment)
+@media(max-width:700px){.gal{grid-template-columns:1fr 1fr}}
+</style></head><body>
+<nav><b>AURA</b><span>WORK &middot; ABOUT &middot; CONTACT</span></nav>
+<div class="hero"><div class="t">I AM</div><h1>AURA</h1><p>PHOTOGRAPHER &middot; MUMBAI</p></div>
+<div class="gal"><div>.01</div><div>.02</div><div>.03</div><div>.04</div><div>.05</div><div>.06</div></div>
+<div class="foot">AURA STUDIO &mdash; SAMPLE SITE BY KURO</div>
+</body></html>`},
+    {url:'urbanthreads &middot; sample',html:`<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#F4F4F6;color:#1A1A2E}
+nav{display:flex;justify-content:space-between;align-items:center;padding:16px 6%;background:#fff;border-bottom:1px solid #e4e4ea} /* taste-skill-ignore */ (client sample fragment)
+nav b{font-weight:900;letter-spacing:.15em}
+nav span{font-size:11px;letter-spacing:.25em;color:#2563EB;font-weight:700}
+.hero{padding:54px 6% 36px;text-align:center}
+.hero h1{font-size:clamp(34px,7vw,60px);font-weight:900;letter-spacing:-1px;text-transform:uppercase}
+.hero h1 em{font-style:normal;color:#2563EB}
+.hero p{color:#6B7280;font-size:13px;margin-top:10px;letter-spacing:.05em}
+.prods{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:6px 6% 50px}
+.p{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 6px 18px rgba(20,20,40,.06)} /* taste-skill-ignore */ (client sample fragment)
+.p .im{height:110px;display:grid;place-items:center;font-weight:900;font-size:26px;color:#fff}
+.p .im.c1{background:linear-gradient(135deg,#2563EB,#1A1A2E)} /* taste-skill-ignore */ (client sample fragment)
+.p .im.c2{background:linear-gradient(135deg,#EE6E4D,#61210F)} /* taste-skill-ignore */ (client sample fragment)
+.p .im.c3{background:linear-gradient(135deg,#00D4FF,#020024)} /* taste-skill-ignore */ (client sample fragment)
+.p .info{padding:14px 16px}
+.p b{font-size:13px;letter-spacing:.08em;text-transform:uppercase}
+.p span{display:block;font-size:12px;color:#6B7280;margin-top:4px}
+.foot{background:#1A1A2E;color:#fff;text-align:center;padding:16px;font-size:10px;letter-spacing:.3em}
+@media(max-width:700px){.prods{grid-template-columns:1fr}}
+</style></head><body>
+<nav><b>URBAN THREADS</b><span>CART (0)</span></nav>
+<div class="hero"><h1>Wear The <em>Streets</em></h1><p>New drop every month. Limited runs only.</p></div>
+<div class="prods">
+  <div class="p"><div class="im c1">UT</div><div class="info"><b>Oversized Tee</b><span>&#8377;799 &middot; S M L XL</span></div></div>
+  <div class="p"><div class="im c2">UT</div><div class="info"><b>Cargo Pants</b><span>&#8377;1,499 &middot; 30 32 34</span></div></div>
+  <div class="p"><div class="im c3">UT</div><div class="info"><b>Windbreaker</b><span>&#8377;1,999 &middot; M L XL</span></div></div>
+</div>
+<div class="foot">URBAN THREADS &mdash; SAMPLE SITE BY KURO</div>
+</body></html>`}
+  ];
+  const demoFrame=document.getElementById('demoFrame'),demoUrl=document.getElementById('demoUrl'),demoTabs=document.getElementById('demoTabs');
+  const renderSample=i=>{
+    demoFrame.srcdoc=SAMPLES[i].html;
+    demoUrl.innerHTML=SAMPLES[i].url;
+    demoTabs.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('on',j===i));
+  };
+  demoTabs.addEventListener('click',e=>{const b=e.target.closest('.tab');if(b)renderSample(+b.dataset.s);});
+  renderSample(0);
 </script>
 
-<!-- Lenis Physics-Based Smooth Scroll Engine -->
-<script src="assets/lenis.min.js"></script>
-<script>
-  if (typeof Lenis === 'undefined') {
-    document.write('<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js"><\/script>');
+<script type="module">
+  // Reveal-on-scroll: anime.js v4 runs the tweens, IntersectionObserver triggers them.
+  // Guard: hidden state (.pre) is added ONLY when motion is on; removed on complete,
+  // in a catch around the CDN import, and under prefers-reduced-motion — a failed
+  // script can never leave content invisible.
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const els=[...document.querySelectorAll('.reveal')];
+  if(reduced){/* stay visible, no hidden state ever added */}
+  else{
+    try{
+      const {animate,stagger}=await import('https://cdn.jsdelivr.net/npm/animejs@4/+esm');
+      els.forEach(el=>el.classList.add('pre'));
+      const io=new IntersectionObserver(entries=>{
+        entries.forEach(en=>{
+          if(!en.isIntersecting)return;
+          io.unobserve(en.target);
+          const el=en.target;
+          animate(el,{opacity:[0,1],y:[26,0],delay:stagger(85),ease:'out(3)',duration:700})
+            .then(()=>el.classList.remove('pre'))
+            .catch(()=>el.classList.remove('pre'));
+        });
+      },{threshold:.12});
+      els.forEach(el=>io.observe(el));
+    }catch(err){
+      els.forEach(el=>el.classList.remove('pre'));
+    }
   }
-</script>
-<script>
-  (() => {
-    // Respect accessibility settings for reduced motion
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion || typeof Lenis === 'undefined') return;
-
-    // Calibrated physics configuration
-    const lenis = new Lenis({
-      duration: 1.25,                                     // Viscous decay duration (seconds)
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential decay friction physics curve
-      orientation: 'vertical',
-      gestureOrientation: 'vertical',
-      smoothWheel: true,
-      wheelMultiplier: 1.0,                              // Natural, weighted resistance
-      touchMultiplier: 1.5,                              // Silky trackpad & touch inertia
-      infinite: false,
-      autoRaf: false
-    });
-
-    window.lenis = lenis;
-
-    // Splash loader synchronization
-    const splashLoader = document.getElementById('loader');
-    if (splashLoader && !splashLoader.classList.contains('done')) {
-      lenis.stop();
-      const splashObserver = new MutationObserver(() => {
-        if (!document.getElementById('loader') || splashLoader.classList.contains('done')) {
-          lenis.start();
-          splashObserver.disconnect();
-        }
-      });
-      splashObserver.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
-    }
-
-    // High performance RAF loop matching display refresh rate
-    let rafId;
-    function raf(time) {
-      lenis.raf(time);
-      rafId = requestAnimationFrame(raf);
-    }
-    rafId = requestAnimationFrame(raf);
-
-    // Physics-driven parallax and UI momentum bindings
-    const progressBar = document.getElementById('scrollProgress');
-    const kanji = document.querySelector('.kanji');
-    const heroBg = document.querySelector('.hero-bg');
-    const header = document.querySelector('header');
-
-    lenis.on('scroll', ({ scroll, progress }) => {
-      // 1. Hairline progress bar tied directly to physical scroll progress
-      if (progressBar) {
-        progressBar.style.transform = `scaleX(${progress})`;
-      }
-
-      // 2. Parallax inertia on Kanji background
-      if (kanji) {
-        kanji.style.transform = `translate3d(0, ${scroll * 0.12}px, 0)`;
-      }
-
-      // 3. Hero background depth lag (active during hero visibility)
-      if (heroBg && scroll < window.innerHeight * 1.3) {
-        heroBg.style.transform = `translate3d(0, ${scroll * 0.22}px, 0)`;
-      }
-
-      // 4. Header elevation styling
-      if (header) {
-        if (scroll > 25) {
-          header.classList.add('is-scrolled');
-        } else {
-          header.classList.remove('is-scrolled');
-        }
-      }
-    });
-
-    // Intercept internal anchor links for smooth physics scrollTo
-    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-      anchor.addEventListener('click', (e) => {
-        const hash = anchor.getAttribute('href');
-        if (!hash || hash === '#') return;
-        const target = document.querySelector(hash);
-        if (target) {
-          e.preventDefault();
-          const headerH = header ? header.offsetHeight : 64;
-          const offset = hash === '#top' ? 0 : -headerH - 14;
-
-          lenis.scrollTo(target, {
-            offset: offset,
-            duration: 1.3,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
-          });
-
-          if (history.pushState) {
-            history.pushState(null, '', hash);
-          }
-        }
-      });
-    });
-
-    // Keep scroll boundaries accurate during window resize or image loading
-    window.addEventListener('resize', () => lenis.resize());
-    window.addEventListener('load', () => lenis.resize());
-  })();
 </script>
 </body>
 </html>
